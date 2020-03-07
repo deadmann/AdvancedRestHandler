@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>AdvancedRestHandler</id>
+    <version>$version$</version>
+    <title>Advanced Rest Handler</title>
+    <authors>Hassan Faghihi</authors>
+    <owners>Hassan Faghihi</owners>
+    <licenseUrl>https://github.com/deadmann/AdvanceRestHandler/blob/master/LICENSE.md</licenseUrl>
+    <projectUrl>https://github.com/deadmann/AdvanceRestHandle</projectUrl>
+    <iconUrl>https://avatars3.githubusercontent.com/u/7890777?s=140</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>ARH provide an easy way to send and receive data from web services</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright &#x00A9; Hassan Faghihi.  All rights reserved.</copyright>
+    <tags>advanced rest handler json service</tags>
+  </metadata>
+  <files>
+	  <file src="AdvancedRestHandler\bin\$configuration$\AdvancedRestHandler.dll" target="lib\net40\" />
+  </files>
+</package>
