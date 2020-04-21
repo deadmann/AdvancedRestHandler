@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -33,7 +33,7 @@ namespace AdvanceRestHandler
         [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
         public AdvancedRestHandler(string baseUrl, bool fixEndOfUrl = true)
         {
-            if (fixEndOfUrl)
+            if (!string.IsNullOrWhiteSpace(_baseUrl) && fixEndOfUrl)
             {
                 _baseUrl = baseUrl.TrimEnd('/') + '/';
             }
@@ -66,10 +66,7 @@ namespace AdvanceRestHandler
             string jsonString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = new HttpClient
-            {
-                BaseAddress = new Uri(_baseUrl)
-            })
+            using (HttpClient client = GetHttpClient())
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -120,10 +117,7 @@ namespace AdvanceRestHandler
             string jsonString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = new HttpClient
-            {
-                BaseAddress = new Uri(_baseUrl)
-            })
+            using (HttpClient client = GetHttpClient())
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -175,10 +169,7 @@ namespace AdvanceRestHandler
             string jsonString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = new HttpClient
-            {
-                BaseAddress = new Uri(_baseUrl)
-            })
+            using (HttpClient client = GetHttpClient())
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -235,10 +226,7 @@ namespace AdvanceRestHandler
             string jsonString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = new HttpClient
-            {
-                BaseAddress = new Uri(_baseUrl)
-            })
+            using (HttpClient client = GetHttpClient())
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -320,10 +308,7 @@ namespace AdvanceRestHandler
             string jsonString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = new HttpClient
-            {
-                BaseAddress = new Uri(_baseUrl)
-            })
+            using (HttpClient client = GetHttpClient())
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 if (options.UseGZip)
@@ -404,10 +389,7 @@ namespace AdvanceRestHandler
             string requestString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = new HttpClient
-            {
-                BaseAddress = new Uri(_baseUrl)
-            })
+            using (HttpClient client = GetHttpClient())
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -453,6 +435,21 @@ namespace AdvanceRestHandler
         }
 
         #region HelperMethods
+
+        /// <summary>
+        /// Create new Instance of the HttpClient depend on the initialization conditions
+        /// </summary>
+        /// <returns></returns>
+        private HttpClient GetHttpClient()
+        {
+            if (_baseUrl != null) {
+                return new HttpClient
+                {
+                    BaseAddress = new Uri(_baseUrl)
+                };
+            }
+            return new HttpClient();
+        }
 
         /// <summary>
         /// Convert object to "Url Encoded" Key Value
