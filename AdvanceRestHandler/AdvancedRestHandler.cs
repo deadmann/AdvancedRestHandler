@@ -63,42 +63,11 @@ namespace AdvanceRestHandler
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public TResponse GetData<TResponse>(string partialUrl, IEnumerable<KeyValuePair<string, IEnumerable<string>>> headers = null, bool useGZip = false)
         {
-            string jsonString;
-            HttpStatusCode statusCode;
-
-            using (HttpClient client = GetHttpClient())
+            return GetData<TResponse>(partialUrl, new RestHandlerRequestOptions
             {
-                client.DefaultRequestHeaders.Accept.Clear();
-                //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                if (useGZip)
-                {
-                    client.DefaultRequestHeaders.AcceptEncoding.Add(
-                        // ReSharper disable once StringLiteralTypo
-                        new System.Net.Http.Headers.StringWithQualityHeaderValue("gzip"));
-                }
-
-                SetHeaders(headers, client);
-
-                var response = client.GetAsync(partialUrl).Result;
-                statusCode = response.StatusCode;
-
-                // ReSharper disable once StringLiteralTypo
-                if (response.Content.Headers.ContentEncoding.Any(x => x == "gzip"))
-                {
-                    using (Stream stream = response.Content.ReadAsStreamAsync().Result)
-                    using (Stream decompressed = new GZipStream(stream, CompressionMode.Decompress))
-                    using (StreamReader reader = new StreamReader(decompressed))
-                    {
-                        jsonString = reader.ReadToEnd();
-                    }
-                }
-                else
-                {
-                    jsonString = response.Content.ReadAsStringAsync().Result;
-                }
-            }
-
-            return MakeResponse<TResponse>(null, jsonString, statusCode, new List<Type>());
+                Headers = headers,
+                UseGZip = useGZip
+            });
         }
 
         /// <summary>
@@ -133,20 +102,7 @@ namespace AdvanceRestHandler
                 var response = client.GetAsync(partialUrl).Result;
                 statusCode = response.StatusCode;
 
-                // ReSharper disable once StringLiteralTypo
-                if (response.Content.Headers.ContentEncoding.Any(x => x == "gzip"))
-                {
-                    using (Stream stream = response.Content.ReadAsStreamAsync().Result)
-                    using (Stream decompressed = new GZipStream(stream, CompressionMode.Decompress))
-                    using (StreamReader reader = new StreamReader(decompressed))
-                    {
-                        jsonString = reader.ReadToEnd();
-                    }
-                }
-                else
-                {
-                    jsonString = response.Content.ReadAsStringAsync().Result;
-                }
+                jsonString = GetResponseContentString(response.Content, options);
             }
 
             return MakeResponse<TResponse>(null, jsonString, statusCode, options.FallbackModels);
@@ -166,48 +122,11 @@ namespace AdvanceRestHandler
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public TResponse PostData<TResponse>(string partialUrl, IEnumerable<KeyValuePair<string, IEnumerable<string>>> headers = null, bool useGZip = false)
         {
-            string jsonString;
-            HttpStatusCode statusCode;
-
-            using (HttpClient client = GetHttpClient())
+            return PostData<TResponse>(partialUrl, new RestHandlerRequestOptions
             {
-                client.DefaultRequestHeaders.Accept.Clear();
-                //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                if (useGZip)
-                {
-                    client.DefaultRequestHeaders.AcceptEncoding.Add(
-                        // ReSharper disable once StringLiteralTypo
-                        new System.Net.Http.Headers.StringWithQualityHeaderValue("gzip"));
-                }
-
-                SetHeaders(headers, client);
-
-                //var content = new FormUrlEncodedContent(new[]
-                //{
-                //    new KeyValuePair("", "login")
-                //});
-
-                var content = new StringContent(string.Empty);
-                var response = client.PostAsync(partialUrl, content).Result;
-                statusCode = response.StatusCode;
-
-                // ReSharper disable once StringLiteralTypo
-                if (response.Content.Headers.ContentEncoding.Any(x => x == "gzip"))
-                {
-                    using (Stream stream = response.Content.ReadAsStreamAsync().Result)
-                    using (Stream decompressed = new GZipStream(stream, CompressionMode.Decompress))
-                    using (StreamReader reader = new StreamReader(decompressed))
-                    {
-                        jsonString = reader.ReadToEnd();
-                    }
-                }
-                else
-                {
-                    jsonString = response.Content.ReadAsStringAsync().Result;
-                }
-            }
-
-            return MakeResponse<TResponse>(null, jsonString, statusCode, new List<Type>());
+                Headers = headers,
+                UseGZip = useGZip
+            });
         }
 
         /// <summary>
@@ -248,20 +167,7 @@ namespace AdvanceRestHandler
                 var response = client.PostAsync(partialUrl, content).Result;
                 statusCode = response.StatusCode;
 
-                // ReSharper disable once StringLiteralTypo
-                if (response.Content.Headers.ContentEncoding.Any(x => x == "gzip"))
-                {
-                    using (Stream stream = response.Content.ReadAsStreamAsync().Result)
-                    using (Stream decompressed = new GZipStream(stream, CompressionMode.Decompress))
-                    using (StreamReader reader = new StreamReader(decompressed))
-                    {
-                        jsonString = reader.ReadToEnd();
-                    }
-                }
-                else
-                {
-                    jsonString = response.Content.ReadAsStringAsync().Result;
-                }
+                jsonString = GetResponseContentString(response.Content, options);
             }
 
             return MakeResponse<TResponse>(null, jsonString, statusCode, options.FallbackModels);
@@ -284,7 +190,6 @@ namespace AdvanceRestHandler
         {
             return PostNonModelData<TResponse>(partialUrl, content, new RestHandlerRequestOptions
             {
-                FallbackModels = new List<Type>(),
                 UseGZip = useGZip,
                 Headers = headers
             });
@@ -323,20 +228,7 @@ namespace AdvanceRestHandler
                 var response = client.PostAsync(partialUrl, content).Result;
                 statusCode = response.StatusCode;
 
-                // ReSharper disable once StringLiteralTypo
-                if (response.Content.Headers.ContentEncoding.Any(x => x == "gzip"))
-                {
-                    using (Stream stream = response.Content.ReadAsStreamAsync().Result)
-                    using (Stream decompressed = new GZipStream(stream, CompressionMode.Decompress))
-                    using (StreamReader reader = new StreamReader(decompressed))
-                    {
-                        jsonString = reader.ReadToEnd();
-                    }
-                }
-                else
-                {
-                    jsonString = response.Content.ReadAsStringAsync().Result;
-                }
+                jsonString = GetResponseContentString(response.Content, options);
             }
 
             return MakeResponse<TResponse>(null, jsonString, statusCode, options.FallbackModels);
@@ -415,20 +307,7 @@ namespace AdvanceRestHandler
                 var response = client.PostAsync(partialUrl, content).Result;
                 statusCode = response.StatusCode;
 
-                // ReSharper disable once StringLiteralTypo
-                if (response.Content.Headers.ContentEncoding.Any(x => x == "gzip"))
-                {
-                    using (Stream stream = response.Content.ReadAsStreamAsync().Result)
-                    using (Stream decompressed = new GZipStream(stream, CompressionMode.Decompress))
-                    using (StreamReader reader = new StreamReader(decompressed))
-                    {
-                        jsonString = reader.ReadToEnd();
-                    }
-                }
-                else
-                {
-                    jsonString = response.Content.ReadAsStringAsync().Result;
-                }
+                jsonString = GetResponseContentString(response.Content, options);
             }
 
             return MakeResponse<TResponse>(requestString, jsonString, statusCode, options.FallbackModels);
@@ -442,7 +321,7 @@ namespace AdvanceRestHandler
         /// <returns></returns>
         private HttpClient GetHttpClient()
         {
-            if (_baseUrl != null) {
+            if (!string.IsNullOrWhiteSpace(_baseUrl)) {
                 return new HttpClient
                 {
                     BaseAddress = new Uri(_baseUrl)
@@ -596,6 +475,8 @@ namespace AdvanceRestHandler
                 }
                 catch (Exception ex)
                 {
+                    result = GenerateTResponseRhResponse<TResponse>();
+
                     object fallbackResult = null;
                     Dictionary<Type, Exception> fallbackExceptions = new Dictionary<Type, Exception>();
                     foreach (var fallbackType in fallbackTypes)
@@ -620,7 +501,6 @@ namespace AdvanceRestHandler
                         }
                     }
 
-                    result = GenerateTResponseRhResponse<TResponse>();
 
                     ArhException arhEx = new ArhException(
                         fallbackTypes.Any()
@@ -645,6 +525,41 @@ namespace AdvanceRestHandler
 
             //Normal (Non-ARH Model) Deserialization of Response
             return DeserializeToObject<TResponse>(responseString);
+        }
+
+        /// <summary>
+        /// Get string content from HttpContent of the response object
+        /// </summary>
+        /// <param name="content"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        private string GetResponseContentString(HttpContent content, RestHandlerRequestOptions options)
+        {
+            string result;
+            // ReSharper disable once StringLiteralTypo
+            if (content.Headers.ContentEncoding.Any(x => x == "gzip"))
+            {
+                using (Stream stream = content.ReadAsStreamAsync().Result)
+                using (Stream decompressed = new GZipStream(stream, CompressionMode.Decompress))
+                using (StreamReader reader = options.StringResponseEncoding == null
+                    ? new StreamReader(decompressed)
+                    : new StreamReader(decompressed, options.StringResponseEncoding))
+                {
+                    result = reader.ReadToEnd();
+                }
+            }
+            else
+            {
+                //result = content.ReadAsStringAsync().Result;
+                using (Stream stream = content.ReadAsStreamAsync().Result)
+                using (StreamReader reader = options.StringResponseEncoding == null
+                    ? new StreamReader(stream)
+                    : new StreamReader(stream, options.StringResponseEncoding))
+                {
+                    result = reader.ReadToEnd();
+                }
+            }
+            return result;
         }
 
         /// <summary>
@@ -708,6 +623,7 @@ namespace AdvanceRestHandler
             //}
             if (options.RequestType == RequestType.FormUrlEncoded)
             {
+#warning ...???
                 var keyValueOnObject = ToKeyValue(req);
                 var keyValueRequest = new List<KeyValuePair<string, string>>();
                 foreach (KeyValuePair<string, string> p in keyValueRequest)
@@ -800,7 +716,12 @@ namespace AdvanceRestHandler
         /// Use another encoding for the content passed to StringContent Object used by JSON serializer
         /// </summary>
         public Encoding StringContentEncoding { get; set; } = null;
-        
+
+        /// <summary>
+        /// Use another encoding for the content passed to StringContent Object used by JSON serializer
+        /// </summary>
+        public Encoding StringResponseEncoding { get; set; } = null;
+
         /// <summary>
         /// Remove default "; charset=utf-8" from Content-Type in header
         /// </summary>
