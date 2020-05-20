@@ -33,7 +33,7 @@ namespace AdvanceRestHandler
         [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
         public AdvancedRestHandler(string baseUrl, bool fixEndOfUrl = true)
         {
-            if (!string.IsNullOrWhiteSpace(_baseUrl) && fixEndOfUrl)
+            if (!string.IsNullOrWhiteSpace(baseUrl) && fixEndOfUrl)
             {
                 _baseUrl = baseUrl.TrimEnd('/') + '/';
             }
