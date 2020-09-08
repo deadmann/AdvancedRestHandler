@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -23,6 +24,11 @@ namespace AdvanceRestHandler
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public List<KeyValuePair<string, IEnumerable<string>>> ClientDefaultHeaders { get; set; }
+
+        /// <summary>
+        /// If set, will be used globally for requests
+        /// </summary>
+        public TimeSpan? GlobalTimeout { get; set; }
 
         /// <summary>
         /// 
@@ -47,6 +53,11 @@ namespace AdvanceRestHandler
         [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
         public AdvancedRestHandler() : this(null)
         {
+        }
+
+        public AdvancedRestHandler(string baseUrl, RestHandlerInitializerOptions options): this(baseUrl, options.FixEndOfUrl)
+        {
+            
         }
 
         /// <summary>
@@ -86,7 +97,7 @@ namespace AdvanceRestHandler
             string jsonString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = GetHttpClient())
+            using (HttpClient client = GetHttpClient(options))
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -145,7 +156,7 @@ namespace AdvanceRestHandler
             string jsonString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = GetHttpClient())
+            using (HttpClient client = GetHttpClient(options))
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -213,7 +224,7 @@ namespace AdvanceRestHandler
             string jsonString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = GetHttpClient())
+            using (HttpClient client = GetHttpClient(options))
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 if (options.UseGZip)
@@ -281,7 +292,7 @@ namespace AdvanceRestHandler
             string requestString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = GetHttpClient())
+            using (HttpClient client = GetHttpClient(options))
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -319,15 +330,27 @@ namespace AdvanceRestHandler
         /// Create new Instance of the HttpClient depend on the initialization conditions
         /// </summary>
         /// <returns></returns>
-        private HttpClient GetHttpClient()
+        private HttpClient GetHttpClient(RestHandlerRequestOptions requestOptions)
         {
-            if (!string.IsNullOrWhiteSpace(_baseUrl)) {
-                return new HttpClient
+            HttpClient httpClient;
+            if (!string.IsNullOrWhiteSpace(_baseUrl))
+            {
+                httpClient = new HttpClient
                 {
                     BaseAddress = new Uri(_baseUrl)
                 };
             }
-            return new HttpClient();
+            else
+            {
+                httpClient = new HttpClient();
+            }
+
+            if (requestOptions.Timeout.HasValue)
+                httpClient.Timeout = requestOptions.Timeout.Value;
+            else if (GlobalTimeout.HasValue)
+                httpClient.Timeout = GlobalTimeout.Value;
+
+            return httpClient;
         }
 
         /// <summary>
@@ -690,12 +713,35 @@ namespace AdvanceRestHandler
     [SuppressMessage("ReSharper", "RedundantDefaultMemberInitializer")]
     [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
     [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global")]
+    public class RestHandlerInitializerOptions
+    {
+        /// <summary>
+        /// In some web framework, existence or not existence of slash '/' can cause to invoke an incorrect url; 
+        /// This feature can be turned of, but requires a manually handling of URL's slash, at the end of base url or begin of partial urls
+        /// </summary>
+        public bool FixEndOfUrl { get; set; }
+
+        /// <summary>
+        /// Set global Timeout of requests
+        /// </summary>
+        public TimeSpan Timeout { get; set; }
+    }
+
+    [SuppressMessage("ReSharper", "RedundantDefaultMemberInitializer")]
+    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+    [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global")]
     public class RestHandlerRequestOptions
     {
         /// <summary>
         /// Provide custom headers that can be set within the request
         /// </summary>
         public IEnumerable<KeyValuePair<string, IEnumerable<string>>> Headers { get; set; } = null;
+
+
+        /// <summary>
+        /// Set Timeout of the request
+        /// </summary>
+        public TimeSpan? Timeout { get; set; }
 
         /// <summary>
         /// If We Should Decode Returning Data Using GZip Method
