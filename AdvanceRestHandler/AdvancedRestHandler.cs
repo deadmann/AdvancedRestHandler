@@ -9,11 +9,10 @@ using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
-using System.Threading;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace AdvanceRestHandler
+namespace Arh
 {
     public class AdvancedRestHandler
     {
