@@ -10,6 +10,10 @@
     <AssemblyVersion>1.1.0.0</AssemblyVersion>
     <FileVersion>1.1.0.0</FileVersion>
     <Version>1.1.0</Version>
+    <RepositoryUrl>https://github.com/deadmann/AdvanceRestHandler</RepositoryUrl>
+    <PackageReleaseNotes>1.0.0: Initial Package
+1.1.0:
+- Changed default namespace name from "AdvancedRestHandler" to "Arh" due to main class interfrences with namespace name</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
