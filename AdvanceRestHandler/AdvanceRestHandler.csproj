@@ -17,7 +17,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>C:\Users\Hassan\Source\Repos\AdvanceRestHandler\AdvanceRestHandler\AdvanceRestHandler.xml</DocumentationFile>
+    <DocumentationFile>AdvanceRestHandler.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>AdvanceRestHandler.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

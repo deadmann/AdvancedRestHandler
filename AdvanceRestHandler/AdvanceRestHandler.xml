@@ -1,0 +1,323 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AdvanceRestHandler</name>
+    </assembly>
+    <members>
+        <member name="P:Arh.AdvancedRestHandler.ClientDefaultHeaders">
+            <summary>
+            Provide custom headers that can be set within the request
+            </summary>
+        </member>
+        <member name="P:Arh.AdvancedRestHandler.GlobalTimeout">
+            <summary>
+            If set, will be used globally for requests
+            </summary>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.#ctor(System.String,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="baseUrl"></param>
+            <param name="fixEndOfUrl">In some web framework, existence or not existence of slash '/' can cause to invoke an incorrect url; 
+            This feature can be turned of, but requires a manually handling of URL's slash, at the end of base url or begin of partial urls</param>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.GetData``1(System.String,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean)">
+            <summary>
+            Sending a GET Request to the Server and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="headers">Provide custom headers that can be set within the request </param>
+            <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.GetData``1(System.String,Arh.RestHandlerRequestOptions)">
+            <summary>
+            Sending a GET Request to the Server and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="options">Set of options that affect the way that the request will be sent</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.PostData``1(System.String,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean)">
+            <summary>
+            Sending a Post Request to the Server Without a Request Model and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="headers">Provide custom headers that can be set within the request </param>
+            <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.PostData``1(System.String,Arh.RestHandlerRequestOptions)">
+            <summary>
+            Sending a Post Request to the Server Without a Request Model and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="options">Set of options that affect the way that the request will be sent</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.PostNonModelData``1(System.String,System.Net.Http.HttpContent,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean)">
+            <summary>
+            Sending a Post Request to the Server With Data that are not directly serializable
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="content">Any type of content that are not serializable with our serializer</param>
+            <param name="headers">Provide custom headers that can be set within the request </param>
+            <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.PostNonModelData``1(System.String,System.Net.Http.HttpContent,Arh.RestHandlerRequestOptions)">
+            <summary>
+            Sending a Post Request to the Server With Data that are not directly serializable
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="content">Any type of content that are not serializable with our serializer</param>
+            <param name="options">Set of options that affect the way that the request will be sent</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.PostData``2(System.String,``1,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean,Arh.RequestType)">
+            <summary>
+            Sending a Post Request to the Server With a Request Model and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <typeparam name="TRequest">Type of Sending Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="request">The Requesting Model Instance of Type <see cref="!:TRequest"/></param>
+            <param name="headers">Provide custom headers that can be set within the request </param>
+            <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+            <param name="requestType">Type of request, which affect the way that object will serialize (default json)</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.PostData``2(System.String,``1,Arh.RestHandlerRequestOptions)">
+            <summary>
+            Sending a Post Request to the Server With a Request Model and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <typeparam name="TRequest">Type of Sending Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="request">The Requesting Model Instance of Type <see cref="!:TRequest"/></param>
+            <param name="options">Set of options that affect the way that the request will be sent</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.GetHttpClient(Arh.RestHandlerRequestOptions)">
+            <summary>
+            Create new Instance of the HttpClient depend on the initialization conditions
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.ToKeyValue(System.Object)">
+            <summary>
+            Convert object to "Url Encoded" Key Value
+            Based On: https://geeklearning.io/serialize-an-object-to-an-url-encoded-string-in-csharp/
+            </summary>
+            <param name="metaToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.SetHeaders(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Net.Http.HttpClient)">
+            <summary>
+            Set Headers inside the client
+            </summary>
+            <param name="headers"></param>
+            <param name="client"></param>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.MakeResponse``1(System.String,System.String,System.Net.HttpStatusCode,System.Collections.Generic.List{System.Type})">
+            <summary>
+            Make response based on type of data
+            </summary>
+            <typeparam name="TResponse"></typeparam>
+            <param name="requestString">request text</param>
+            <param name="responseString">response text</param>
+            <param name="statusCode">result status code</param>
+            <param name="fallbackTypes">type of data other that return type, that may match with incoming object</param>
+            <returns></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.GetResponseContentString(System.Net.Http.HttpContent,Arh.RestHandlerRequestOptions)">
+            <summary>
+            Get string content from HttpContent of the response object
+            </summary>
+            <param name="content"></param>
+            <param name="options"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.DeserializeToType(System.String,System.Type)">
+            <summary>
+            Change Deserializer On Overriden Calss
+            </summary>
+            <typeparam name="TResponse"></typeparam>
+            <param name="jsonString"></param>
+            <param name="genericTypeArgument"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.DeserializeToObject``1(System.String)">
+            <summary>
+            Change Deserializer On Overridden Calss
+            </summary>
+            <typeparam name="TResponse"></typeparam>
+            <param name="jsonString"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.ObjectSerializer``1(``0,Arh.RestHandlerRequestOptions)">
+            <summary>
+            Change Serializer which include all provided serializer On Overridden Class
+            </summary>
+            <typeparam name="TRequest"></typeparam>
+            <param name="req"></param>
+            <param name="options"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.JsonSerializeObject``1(``0,Arh.RestHandlerRequestOptions)">
+            <summary>
+            Override JsonSerializer which is called within the ObjectSerializer
+            </summary>
+            <typeparam name="TRequest"></typeparam>
+            <param name="req"></param>
+            <param name="options"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.SetValueOnProperty(System.Object,System.String,System.Object)">
+            <summary>
+            Set Value on Public Instance Property
+            </summary>
+            <param name="object"></param>
+            <param name="propertyName"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.GenerateTResponseRhResponse``1">
+            <summary>
+            Generate TResponse of RhResponse type
+            </summary>
+            <typeparam name="TResponse"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="P:Arh.RestHandlerInitializerOptions.FixEndOfUrl">
+            <summary>
+            In some web framework, existence or not existence of slash '/' can cause to invoke an incorrect url; 
+            This feature can be turned of, but requires a manually handling of URL's slash, at the end of base url or begin of partial urls
+            </summary>
+        </member>
+        <member name="P:Arh.RestHandlerInitializerOptions.Timeout">
+            <summary>
+            Set global Timeout of requests
+            </summary>
+        </member>
+        <member name="P:Arh.RestHandlerRequestOptions.Headers">
+            <summary>
+            Provide custom headers that can be set within the request
+            </summary>
+        </member>
+        <member name="P:Arh.RestHandlerRequestOptions.Timeout">
+            <summary>
+            Set Timeout of the request
+            </summary>
+        </member>
+        <member name="P:Arh.RestHandlerRequestOptions.UseGZip">
+            <summary>
+            If We Should Decode Returning Data Using GZip Method
+            </summary>
+        </member>
+        <member name="P:Arh.RestHandlerRequestOptions.RequestType">
+            <summary>
+            Type of request, which affect the way that object will serialize (default json)
+            </summary>
+        </member>
+        <member name="P:Arh.RestHandlerRequestOptions.FallbackModels">
+            <summary>
+            If the request is not convert-able to the provided type, then we can try to convert it to this type instead
+            </summary>
+        </member>
+        <member name="P:Arh.RestHandlerRequestOptions.StringContentEncoding">
+            <summary>
+            Use another encoding for the content passed to StringContent Object used by JSON serializer
+            </summary>
+        </member>
+        <member name="P:Arh.RestHandlerRequestOptions.StringResponseEncoding">
+            <summary>
+            Use another encoding for the content passed to StringContent Object used by JSON serializer
+            </summary>
+        </member>
+        <member name="P:Arh.RestHandlerRequestOptions.OmitContentTypeCharSet">
+            <summary>
+            Remove default "; charset=utf-8" from Content-Type in header
+            </summary>
+        </member>
+        <member name="T:Arh.ArhResponse">
+            <summary>
+            Provide more information when the model returns, when inherited from
+            </summary>
+        </member>
+        <member name="P:Arh.ArhResponse.ResponseStatusCode">
+            <summary>
+            Won't Link to any JSON property
+            </summary>
+        </member>
+        <member name="P:Arh.ArhResponse.RequestText">
+            <summary>
+            Won't Link to any JSON property
+            </summary>
+        </member>
+        <member name="P:Arh.ArhResponse.ResponseText">
+            <summary>
+            Won't Link to any JSON property
+            </summary>
+        </member>
+        <member name="P:Arh.ArhResponse.Exception">
+            <summary>
+            Won't Link to any JSON property
+            </summary>
+        </member>
+        <member name="P:Arh.ArhResponse.FallbackModel">
+            <summary>
+            Won't Link to any JSON property<br/>
+            if main model doesn't match, try to convert to requested model, defined within the request options.
+            </summary>
+        </member>
+        <member name="T:Arh.ArhStringResponse">
+            <summary>
+            To get direct response, or non-serialized text content
+            </summary>
+        </member>
+        <member name="T:Arh.ArhResponse`1">
+            <summary>
+            provide more information and store it in the given type inside the model
+            <br/>
+            In case the class is sealed, or we are unable to inherit from RhResponse
+            </summary>
+            <typeparam name="TResponse"></typeparam>
+        </member>
+        <member name="P:Arh.ArhResponse`1.ResultModel">
+            <summary>
+            Won't Link to any JSON property
+            </summary>
+        </member>
+    </members>
+</doc>
