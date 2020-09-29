@@ -14,6 +14,9 @@ using Newtonsoft.Json.Linq;
 
 namespace Arh
 {
+    /// <summary>
+    /// Advanced Rest Handler class, A tools that simplifies API calls.
+    /// </summary>
     public class AdvancedRestHandler
     {
         private readonly string _baseUrl;
@@ -29,8 +32,9 @@ namespace Arh
         /// </summary>
         public TimeSpan? GlobalTimeout { get; set; }
 
+        // ReSharper disable once UnusedMember.Global
         /// <summary>
-        /// 
+        /// The Constructor
         /// </summary>
         /// <param name="baseUrl"></param>
         /// <param name="fixEndOfUrl">In some web framework, existence or not existence of slash '/' can cause to invoke an incorrect url; 
@@ -48,12 +52,19 @@ namespace Arh
             }
         }
 
-        // ReSharper disable once UnusedMember.Global
+        /// <summary>
+        /// The Constructor
+        /// </summary>
         [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
         public AdvancedRestHandler() : this(null)
         {
         }
 
+        /// <summary>
+        /// The Constructor
+        /// </summary>
+        /// <param name="baseUrl"></param>
+        /// <param name="options"></param>
         public AdvancedRestHandler(string baseUrl, RestHandlerInitializerOptions options): this(baseUrl, options.FixEndOfUrl)
         {
             
@@ -585,9 +596,8 @@ namespace Arh
         }
 
         /// <summary>
-        /// Change Deserializer On Overriden Calss
+        /// Change Deserializer On Overriden Class
         /// </summary>
-        /// <typeparam name="TResponse"></typeparam>
         /// <param name="jsonString"></param>
         /// <param name="genericTypeArgument"></param>
         /// <returns></returns>
@@ -601,7 +611,7 @@ namespace Arh
         }
 
         /// <summary>
-        /// Change Deserializer On Overridden Calss
+        /// Change Deserializer On Overridden Class
         /// </summary>
         /// <typeparam name="TResponse"></typeparam>
         /// <param name="jsonString"></param>
@@ -708,166 +718,4 @@ namespace Arh
 
         #endregion HelperMethods
     }
-
-    [SuppressMessage("ReSharper", "RedundantDefaultMemberInitializer")]
-    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-    [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global")]
-    public class RestHandlerInitializerOptions
-    {
-        /// <summary>
-        /// In some web framework, existence or not existence of slash '/' can cause to invoke an incorrect url; 
-        /// This feature can be turned of, but requires a manually handling of URL's slash, at the end of base url or begin of partial urls
-        /// </summary>
-        public bool FixEndOfUrl { get; set; }
-
-        /// <summary>
-        /// Set global Timeout of requests
-        /// </summary>
-        public TimeSpan Timeout { get; set; }
-    }
-
-    [SuppressMessage("ReSharper", "RedundantDefaultMemberInitializer")]
-    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-    [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global")]
-    public class RestHandlerRequestOptions
-    {
-        /// <summary>
-        /// Provide custom headers that can be set within the request
-        /// </summary>
-        public IEnumerable<KeyValuePair<string, IEnumerable<string>>> Headers { get; set; } = null;
-
-
-        /// <summary>
-        /// Set Timeout of the request
-        /// </summary>
-        public TimeSpan? Timeout { get; set; }
-
-        /// <summary>
-        /// If We Should Decode Returning Data Using GZip Method
-        /// </summary>
-        public bool UseGZip { get; set; } = false;
-
-        /// <summary>
-        /// Type of request, which affect the way that object will serialize (default json)
-        /// </summary>
-        public RequestType RequestType { get; set; } = RequestType.Json;
-
-        /// <summary>
-        /// If the request is not convert-able to the provided type, then we can try to convert it to this type instead
-        /// </summary>
-        public List<Type> FallbackModels { get; set; } = new List<Type>();
-
-        /// <summary>
-        /// Use another encoding for the content passed to StringContent Object used by JSON serializer
-        /// </summary>
-        public Encoding StringContentEncoding { get; set; } = null;
-
-        /// <summary>
-        /// Use another encoding for the content passed to StringContent Object used by JSON serializer
-        /// </summary>
-        public Encoding StringResponseEncoding { get; set; } = null;
-
-        /// <summary>
-        /// Remove default "; charset=utf-8" from Content-Type in header
-        /// </summary>
-        public bool OmitContentTypeCharSet { get; set; } = false;
-    }
-
-    public enum RequestType
-    {
-        Json,
-        FormUrlEncoded
-    }
-
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
-    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
-    internal class ArhException : Exception
-    {
-        private Dictionary<Type, Exception> FallbackExceptions { get; }
-        public ArhException()
-        {
-        }
-
-        public ArhException(Dictionary<Type, Exception> fallbackExceptions)
-        {
-            FallbackExceptions = fallbackExceptions;
-        }
-
-        public ArhException(string message) : base(message)
-        {
-        }
-
-        public ArhException(string message, Dictionary<Type, Exception> fallbackExceptions) : base(message)
-        {
-            FallbackExceptions = fallbackExceptions;
-        }
-
-        public ArhException(string message, Exception innerException, Dictionary<Type, Exception> fallbackExceptions) : base(message, innerException)
-        {
-            FallbackExceptions = fallbackExceptions;
-        }
-    }
-
-    #region RestHandler Client Models
-
-    /// <summary>
-    /// Provide more information when the model returns, when inherited from
-    /// </summary>
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-    public abstract class ArhResponse
-    {
-        /// <summary>
-        /// Won't Link to any JSON property
-        /// </summary>
-        [JsonIgnore]
-        public HttpStatusCode ResponseStatusCode { get; set; }
-        /// <summary>
-        /// Won't Link to any JSON property
-        /// </summary>
-        [JsonIgnore]
-        public string RequestText { get; set; }
-        /// <summary>
-        /// Won't Link to any JSON property
-        /// </summary>
-        [JsonIgnore]
-        public string ResponseText { get; set; }
-        /// <summary>
-        /// Won't Link to any JSON property
-        /// </summary>
-        [JsonIgnore]
-        public Exception Exception { get; set; }
-        /// <summary>
-        /// Won't Link to any JSON property<br/>
-        /// if main model doesn't match, try to convert to requested model, defined within the request options.
-        /// </summary>
-        [JsonIgnore]
-        public object FallbackModel { get; set; }
-    }
-
-    /// <summary>
-    /// To get direct response, or non-serialized text content
-    /// </summary>
-    public class ArhStringResponse : ArhResponse
-    {
-    }
-
-    /// <summary>
-    /// provide more information and store it in the given type inside the model
-    /// <br/>
-    /// In case the class is sealed, or we are unable to inherit from RhResponse
-    /// </summary>
-    /// <typeparam name="TResponse"></typeparam>
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-    public sealed class ArhResponse<TResponse> : ArhResponse
-    {
-        /// <summary>
-        /// Won't Link to any JSON property
-        /// </summary>
-        [JsonIgnore]
-        public TResponse ResultModel { get; set; }
-    }
-
-    #endregion RestHandler Client Models
 }
