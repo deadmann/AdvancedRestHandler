@@ -1,1 +1,6 @@
-dotnet nuget push "bin/Release/AdvancedRestHandler.1.0.0.nupkg" --source "github"
+// Step 1: Authenticate (if this is the first time) Note you must also pass --store-password-in-clear-text on non-Windows systems.
+$ dotnet nuget add source https://nuget.pkg.github.com/deadmann/index.json -n github -u deadmann -p GH_TOKEN [--store-password-in-clear-text]
+// Step 2: Pack
+$ dotnet pack --configuration Release
+// Step 3: Publish
+$ dotnet nuget push "bin/Release/AdvancedRestHandler.1.0.0.nupkg" --source "github"
