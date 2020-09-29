@@ -2,26 +2,33 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <PackageProjectUrl>https://github.com/deadmann/AdvanceRestHandler</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/deadmann/AdvancedRestHandler</PackageProjectUrl>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <RootNamespace>Arh</RootNamespace>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
-    <Version>1.1.0</Version>
-    <RepositoryUrl>https://github.com/deadmann/AdvanceRestHandler</RepositoryUrl>
+    <AssemblyVersion>1.1.1.0</AssemblyVersion>
+    <FileVersion>1.1.1.0</FileVersion>
+    <Version>1.1.1</Version>
+    <RepositoryUrl>https://github.com/deadmann/AdvancedRestHandler</RepositoryUrl>
     <PackageReleaseNotes>1.0.0: Initial Package
 1.1.0:
 - Changed default namespace name from "AdvancedRestHandler" to "Arh" due to main class interfrences with namespace name</PackageReleaseNotes>
+    <Authors>Hassan Faghihi</Authors>
+    <Copyright>© 2020 Hassan Faghihi</Copyright>
+    <Description>ARH (Advanced Rest Handler) is an API client build on top of Newtownsoft package and System.Net.Http.HttpClient class, to provide an easy and unite way to request many form of APIs with different implementations</Description>
+    <PackageTags>ARH, AdvancedRestHandler, restclient, rest, api, apiclient</PackageTags>
+    <Product>AdvancedRestHandler</Product>
+    <PackageId>AdvancedRestHandler</PackageId>
+    <AssemblyName>AdvancedRestHandler</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>AdvanceRestHandler.xml</DocumentationFile>
+    <DocumentationFile>AdvancedRestHandler.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>AdvanceRestHandler.xml</DocumentationFile>
+    <DocumentationFile>AdvancedRestHandler.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

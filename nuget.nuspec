@@ -6,8 +6,8 @@
     <title>Advanced Rest Handler</title>
     <authors>Hassan Faghihi</authors>
     <owners>Hassan Faghihi</owners>
-    <licenseUrl>https://github.com/deadmann/AdvanceRestHandler/blob/master/LICENSE.md</licenseUrl>
-    <projectUrl>https://github.com/deadmann/AdvanceRestHandle</projectUrl>
+    <licenseUrl>https://github.com/deadmann/AdvancedRestHandler/blob/master/LICENSE.md</licenseUrl>
+    <projectUrl>https://github.com/deadmann/AdvancedRestHandle</projectUrl>
     <iconUrl>https://avatars3.githubusercontent.com/u/7890777?s=140</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>ARH provide an easy way to send and receive data from web services</description>

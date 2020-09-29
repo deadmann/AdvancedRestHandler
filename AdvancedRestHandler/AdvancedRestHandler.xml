@@ -1,9 +1,14 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>AdvanceRestHandler</name>
+        <name>AdvancedRestHandler</name>
     </assembly>
     <members>
+        <member name="T:Arh.AdvancedRestHandler">
+            <summary>
+            Advanced Rest Handler class, A tools that simplifies API calls.
+            </summary>
+        </member>
         <member name="P:Arh.AdvancedRestHandler.ClientDefaultHeaders">
             <summary>
             Provide custom headers that can be set within the request
@@ -16,11 +21,23 @@
         </member>
         <member name="M:Arh.AdvancedRestHandler.#ctor(System.String,System.Boolean)">
             <summary>
-            
+            The Constructor
             </summary>
             <param name="baseUrl"></param>
             <param name="fixEndOfUrl">In some web framework, existence or not existence of slash '/' can cause to invoke an incorrect url; 
             This feature can be turned of, but requires a manually handling of URL's slash, at the end of base url or begin of partial urls</param>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.#ctor">
+            <summary>
+            The Constructor
+            </summary>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.#ctor(System.String,Arh.RestHandlerInitializerOptions)">
+            <summary>
+            The Constructor
+            </summary>
+            <param name="baseUrl"></param>
+            <param name="options"></param>
         </member>
         <member name="M:Arh.AdvancedRestHandler.GetData``1(System.String,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean)">
             <summary>
@@ -171,16 +188,15 @@
         </member>
         <member name="M:Arh.AdvancedRestHandler.DeserializeToType(System.String,System.Type)">
             <summary>
-            Change Deserializer On Overriden Calss
+            Change Deserializer On Overriden Class
             </summary>
-            <typeparam name="TResponse"></typeparam>
             <param name="jsonString"></param>
             <param name="genericTypeArgument"></param>
             <returns></returns>
         </member>
         <member name="M:Arh.AdvancedRestHandler.DeserializeToObject``1(System.String)">
             <summary>
-            Change Deserializer On Overridden Calss
+            Change Deserializer On Overridden Class
             </summary>
             <typeparam name="TResponse"></typeparam>
             <param name="jsonString"></param>
@@ -219,6 +235,149 @@
             <typeparam name="TResponse"></typeparam>
             <returns></returns>
         </member>
+        <member name="T:Arh.ArhCamelCaseWrapper">
+            <summary>
+            Provides an instance of type <see cref="T:Arh.AdvancedRestHandler">AdvancedRestHandler</see> which is customized to handle <a href="https://en.wikipedia.org/wiki/Camel_case">CamelCase</a> property naming
+            </summary>
+        </member>
+        <member name="M:Arh.ArhCamelCaseWrapper.#ctor(Arh.OverrideDirection)">
+            <summary>
+            The Constructor
+            </summary>
+            <param name="direction">set the direction that this type of name handling should be applied to, for requests or response?</param>
+        </member>
+        <member name="M:Arh.ArhCamelCaseWrapper.#ctor(System.String,System.Boolean,Arh.OverrideDirection)">
+            <summary>
+            The Constructor
+            </summary>
+            <param name="baseUrl"></param>
+            <param name="fixEndOfUrl">In some web framework, existence or not existence of slash '/' can cause to invoke an incorrect url; 
+            This feature can be turned of, but requires a manually handling of URL's slash, at the end of base url or begin of partial urls</param>
+            <param name="direction">set the direction that this type of name handling should be applied to, for requests or response?</param>
+        </member>
+        <member name="M:Arh.ArhCamelCaseWrapper.#ctor(System.String,Arh.RestHandlerInitializerOptions,Arh.OverrideDirection)">
+            <summary>
+            The Constructor
+            </summary>
+            <param name="baseUrl"></param>
+            <param name="options"></param>
+            <param name="direction">set the direction that this type of name handling should be applied to, for requests or response?</param>
+        </member>
+        <member name="M:Arh.ArhCamelCaseWrapper.JsonSerializeObject``1(``0,Arh.RestHandlerRequestOptions)">
+            <inheritdoc />
+        </member>
+        <member name="M:Arh.ArhCamelCaseWrapper.DeserializeToType(System.String,System.Type)">
+            <inheritdoc />
+        </member>
+        <member name="M:Arh.ArhCamelCaseWrapper.DeserializeToObject``1(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:Arh.ArhResponse">
+            <summary>
+            Provide more information when the model returns, when inherited from
+            </summary>
+        </member>
+        <member name="P:Arh.ArhResponse.ResponseStatusCode">
+            <summary>
+            Won't Link to any JSON property
+            </summary>
+        </member>
+        <member name="P:Arh.ArhResponse.RequestText">
+            <summary>
+            Won't Link to any JSON property
+            </summary>
+        </member>
+        <member name="P:Arh.ArhResponse.ResponseText">
+            <summary>
+            Won't Link to any JSON property
+            </summary>
+        </member>
+        <member name="P:Arh.ArhResponse.Exception">
+            <summary>
+            Won't Link to any JSON property
+            </summary>
+        </member>
+        <member name="P:Arh.ArhResponse.FallbackModel">
+            <summary>
+            Won't Link to any JSON property<br/>
+            if main model doesn't match, try to convert to requested model, defined within the request options.
+            </summary>
+        </member>
+        <member name="T:Arh.ArhResponse`1">
+            <summary>
+            provide more information and store it in the given type inside the model
+            <br/>
+            In case the class is sealed, or we are unable to inherit from RhResponse
+            </summary>
+            <typeparam name="TResponse"></typeparam>
+        </member>
+        <member name="P:Arh.ArhResponse`1.ResultModel">
+            <summary>
+            Won't Link to any JSON property
+            </summary>
+        </member>
+        <member name="T:Arh.ArhStringResponse">
+            <summary>
+            To get direct response, or non-serialized text content
+            </summary>
+        </member>
+        <member name="T:Arh.ArhSnakeCaseWrapper">
+            <summary>
+            Provides an instance of type <see cref="T:Arh.AdvancedRestHandler">AdvancedRestHandler</see> which is customized to handle <a href="https://en.wikipedia.org/wiki/Snake_case">SnakeCase</a> property naming
+            </summary>
+        </member>
+        <member name="M:Arh.ArhSnakeCaseWrapper.#ctor(Arh.OverrideDirection)">
+            <summary>
+            The Constructor
+            </summary>
+            <param name="direction">set the direction that this type of name handling should be applied to, for requests or response?</param>
+        </member>
+        <member name="M:Arh.ArhSnakeCaseWrapper.#ctor(System.String,System.Boolean,Arh.OverrideDirection)">
+            <summary>
+            The Constructor
+            </summary>
+            <param name="baseUrl"></param>
+            <param name="fixEndOfUrl">In some web framework, existence or not existence of slash '/' can cause to invoke an incorrect url; 
+            This feature can be turned of, but requires a manually handling of URL's slash, at the end of base url or begin of partial urls</param>
+            <param name="direction">set the direction that this type of name handling should be applied to, for requests or response?</param>
+        </member>
+        <member name="M:Arh.ArhSnakeCaseWrapper.#ctor(System.String,Arh.RestHandlerInitializerOptions,Arh.OverrideDirection)">
+            <summary>
+            The Constructor
+            </summary>
+            <param name="baseUrl"></param>
+            <param name="options"></param>
+            <param name="direction">set the direction that this type of name handling should be applied to, for requests or response?</param>
+        </member>
+        <member name="M:Arh.ArhSnakeCaseWrapper.JsonSerializeObject``1(``0,Arh.RestHandlerRequestOptions)">
+            <inheritdoc />
+        </member>
+        <member name="M:Arh.ArhSnakeCaseWrapper.DeserializeToType(System.String,System.Type)">
+            <inheritdoc />
+        </member>
+        <member name="M:Arh.ArhSnakeCaseWrapper.DeserializeToObject``1(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:Arh.RequestType">
+            <summary>
+            Type of contents that should be send to server
+            </summary>
+        </member>
+        <member name="F:Arh.RequestType.Json">
+            <summary>
+            JSON
+            </summary>
+        </member>
+        <member name="F:Arh.RequestType.FormUrlEncoded">
+            <summary>
+            FormUrlEncoded
+            </summary>
+        </member>
+        <member name="T:Arh.RestHandlerInitializerOptions">
+            <summary>
+            A Sets of configuration that can be passed to constructor of <see cref="T:Arh.AdvancedRestHandler">AdvancedRestHandler</see> class for initialization.
+            </summary>
+        </member>
         <member name="P:Arh.RestHandlerInitializerOptions.FixEndOfUrl">
             <summary>
             In some web framework, existence or not existence of slash '/' can cause to invoke an incorrect url; 
@@ -228,6 +387,11 @@
         <member name="P:Arh.RestHandlerInitializerOptions.Timeout">
             <summary>
             Set global Timeout of requests
+            </summary>
+        </member>
+        <member name="T:Arh.RestHandlerRequestOptions">
+            <summary>
+            A Sets of configuration that can be passed to each methods in <see cref="T:Arh.AdvancedRestHandler">AdvancedRestHandler</see> instance, for modifying the way request should be processed.
             </summary>
         </member>
         <member name="P:Arh.RestHandlerRequestOptions.Headers">
@@ -268,55 +432,6 @@
         <member name="P:Arh.RestHandlerRequestOptions.OmitContentTypeCharSet">
             <summary>
             Remove default "; charset=utf-8" from Content-Type in header
-            </summary>
-        </member>
-        <member name="T:Arh.ArhResponse">
-            <summary>
-            Provide more information when the model returns, when inherited from
-            </summary>
-        </member>
-        <member name="P:Arh.ArhResponse.ResponseStatusCode">
-            <summary>
-            Won't Link to any JSON property
-            </summary>
-        </member>
-        <member name="P:Arh.ArhResponse.RequestText">
-            <summary>
-            Won't Link to any JSON property
-            </summary>
-        </member>
-        <member name="P:Arh.ArhResponse.ResponseText">
-            <summary>
-            Won't Link to any JSON property
-            </summary>
-        </member>
-        <member name="P:Arh.ArhResponse.Exception">
-            <summary>
-            Won't Link to any JSON property
-            </summary>
-        </member>
-        <member name="P:Arh.ArhResponse.FallbackModel">
-            <summary>
-            Won't Link to any JSON property<br/>
-            if main model doesn't match, try to convert to requested model, defined within the request options.
-            </summary>
-        </member>
-        <member name="T:Arh.ArhStringResponse">
-            <summary>
-            To get direct response, or non-serialized text content
-            </summary>
-        </member>
-        <member name="T:Arh.ArhResponse`1">
-            <summary>
-            provide more information and store it in the given type inside the model
-            <br/>
-            In case the class is sealed, or we are unable to inherit from RhResponse
-            </summary>
-            <typeparam name="TResponse"></typeparam>
-        </member>
-        <member name="P:Arh.ArhResponse`1.ResultModel">
-            <summary>
-            Won't Link to any JSON property
             </summary>
         </member>
     </members>
