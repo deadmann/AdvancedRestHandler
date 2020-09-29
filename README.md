@@ -1,4 +1,4 @@
-# AdvanceRestHandler
+# AdvancedRestHandler
 A utility code that can be used to request Data from services... <br/>
 
 This library is based on my exprience and need of working in the past company, taking many services in. I could handle any request so far using it, and every time I felt it doesn't support my need, i tried to expand it.
