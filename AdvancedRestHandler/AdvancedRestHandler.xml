@@ -66,7 +66,7 @@
         </member>
         <member name="M:Arh.AdvancedRestHandler.PostData``1(System.String,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean)">
             <summary>
-            Sending a Post Request to the Server Without a Request Model and Returns Data
+            Sending a POST Request to the Server Without a Request Model and Returns Data
             </summary>
             <typeparam name="TResponse">Type of Returning Model</typeparam>
             <param name="partialUrl">
@@ -79,7 +79,7 @@
         </member>
         <member name="M:Arh.AdvancedRestHandler.PostData``1(System.String,Arh.RestHandlerRequestOptions)">
             <summary>
-            Sending a Post Request to the Server Without a Request Model and Returns Data
+            Sending a POST Request to the Server Without a Request Model and Returns Data
             </summary>
             <typeparam name="TResponse">Type of Returning Model</typeparam>
             <param name="partialUrl">
@@ -91,7 +91,7 @@
         </member>
         <member name="M:Arh.AdvancedRestHandler.PostNonModelData``1(System.String,System.Net.Http.HttpContent,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean)">
             <summary>
-            Sending a Post Request to the Server With Data that are not directly serializable
+            Sending a POST Request to the Server With Data that are not directly serializable
             </summary>
             <typeparam name="TResponse">Type of Returning Model</typeparam>
             <param name="partialUrl">
@@ -105,7 +105,7 @@
         </member>
         <member name="M:Arh.AdvancedRestHandler.PostNonModelData``1(System.String,System.Net.Http.HttpContent,Arh.RestHandlerRequestOptions)">
             <summary>
-            Sending a Post Request to the Server With Data that are not directly serializable
+            Sending a POST Request to the Server With Data that are not directly serializable
             </summary>
             <typeparam name="TResponse">Type of Returning Model</typeparam>
             <param name="partialUrl">
@@ -118,7 +118,7 @@
         </member>
         <member name="M:Arh.AdvancedRestHandler.PostData``2(System.String,``1,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean,Arh.RequestType)">
             <summary>
-            Sending a Post Request to the Server With a Request Model and Returns Data
+            Sending a POST Request to the Server With a Request Model and Returns Data
             </summary>
             <typeparam name="TResponse">Type of Returning Model</typeparam>
             <typeparam name="TRequest">Type of Sending Model</typeparam>
@@ -134,7 +134,227 @@
         </member>
         <member name="M:Arh.AdvancedRestHandler.PostData``2(System.String,``1,Arh.RestHandlerRequestOptions)">
             <summary>
-            Sending a Post Request to the Server With a Request Model and Returns Data
+            Sending a POST Request to the Server With a Request Model and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <typeparam name="TRequest">Type of Sending Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="request">The Requesting Model Instance of Type <see cref="!:TRequest"/></param>
+            <param name="options">Set of options that affect the way that the request will be sent</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.PutData``1(System.String,Arh.RestHandlerRequestOptions)">
+            <summary>
+            Sending a PUT Request to the Server Without a Request Model and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="options">Set of options that affect the way that the request will be sent</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.PutNonModelData``1(System.String,System.Net.Http.HttpContent,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean)">
+            <summary>
+            Sending a PUT Request to the Server With Data that are not directly serializable
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="content">Any type of content that are not serializable with our serializer</param>
+            <param name="headers">Provide custom headers that can be set within the request </param>
+            <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.PutNonModelData``1(System.String,System.Net.Http.HttpContent,Arh.RestHandlerRequestOptions)">
+            <summary>
+            Sending a PUT Request to the Server With Data that are not directly serializable
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="content">Any type of content that are not serializable with our serializer</param>
+            <param name="options">Set of options that affect the way that the request will be sent</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.PutData``2(System.String,``1,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean,Arh.RequestType)">
+            <summary>
+            Sending a PUT Request to the Server With a Request Model and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <typeparam name="TRequest">Type of Sending Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="request">The Requesting Model Instance of Type <see cref="!:TRequest"/></param>
+            <param name="headers">Provide custom headers that can be set within the request </param>
+            <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+            <param name="requestType">Type of request, which affect the way that object will serialize (default json)</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.PutData``2(System.String,``1,Arh.RestHandlerRequestOptions)">
+            <summary>
+            Sending a PUT Request to the Server With a Request Model and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <typeparam name="TRequest">Type of Sending Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="request">The Requesting Model Instance of Type <see cref="!:TRequest"/></param>
+            <param name="options">Set of options that affect the way that the request will be sent</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.PatchData``1(System.String,Arh.RestHandlerRequestOptions)">
+            <summary>
+            Sending a PATCH Request to the Server Without a Request Model and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="options">Set of options that affect the way that the request will be sent</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.PatchNonModelData``1(System.String,System.Net.Http.HttpContent,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean)">
+            <summary>
+            Sending a PATCH Request to the Server With Data that are not directly serializable
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="content">Any type of content that are not serializable with our serializer</param>
+            <param name="headers">Provide custom headers that can be set within the request </param>
+            <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.PatchNonModelData``1(System.String,System.Net.Http.HttpContent,Arh.RestHandlerRequestOptions)">
+            <summary>
+            Sending a PATCH Request to the Server With Data that are not directly serializable
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="content">Any type of content that are not serializable with our serializer</param>
+            <param name="options">Set of options that affect the way that the request will be sent</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.PatchData``2(System.String,``1,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean,Arh.RequestType)">
+            <summary>
+            Sending a PATCH Request to the Server With a Request Model and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <typeparam name="TRequest">Type of Sending Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="request">The Requesting Model Instance of Type <see cref="!:TRequest"/></param>
+            <param name="headers">Provide custom headers that can be set within the request </param>
+            <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+            <param name="requestType">Type of request, which affect the way that object will serialize (default json)</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.PatchData``2(System.String,``1,Arh.RestHandlerRequestOptions)">
+            <summary>
+            Sending a PATCH Request to the Server With a Request Model and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <typeparam name="TRequest">Type of Sending Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="request">The Requesting Model Instance of Type <see cref="!:TRequest"/></param>
+            <param name="options">Set of options that affect the way that the request will be sent</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.DeleteData``1(System.String,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean)">
+            <summary>
+            Sending a DELETE Request to the Server Without a Request Model and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="headers">Provide custom headers that can be set within the request </param>
+            <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.DeleteData``1(System.String,Arh.RestHandlerRequestOptions)">
+            <summary>
+            Sending a DELETE Request to the Server Without a Request Model and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="options">Set of options that affect the way that the request will be sent</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.DeleteNonModelData``1(System.String,System.Net.Http.HttpContent,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean)">
+            <summary>
+            Sending a DELETE Request to the Server With Data that are not directly serializable
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="content">Any type of content that are not serializable with our serializer</param>
+            <param name="headers">Provide custom headers that can be set within the request </param>
+            <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.DeleteNonModelData``1(System.String,System.Net.Http.HttpContent,Arh.RestHandlerRequestOptions)">
+            <summary>
+            Sending a DELETE Request to the Server With Data that are not directly serializable
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="content">Any type of content that are not serializable with our serializer</param>
+            <param name="options">Set of options that affect the way that the request will be sent</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.DeleteData``2(System.String,``1,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean,Arh.RequestType)">
+            <summary>
+            Sending a DELETE Request to the Server With a Request Model and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <typeparam name="TRequest">Type of Sending Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="request">The Requesting Model Instance of Type <see cref="!:TRequest"/></param>
+            <param name="headers">Provide custom headers that can be set within the request </param>
+            <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+            <param name="requestType">Type of request, which affect the way that object will serialize (default json)</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.DeleteData``2(System.String,``1,Arh.RestHandlerRequestOptions)">
+            <summary>
+            Sending a DELETE Request to the Server With a Request Model and Returns Data
             </summary>
             <typeparam name="TResponse">Type of Returning Model</typeparam>
             <typeparam name="TRequest">Type of Sending Model</typeparam>
