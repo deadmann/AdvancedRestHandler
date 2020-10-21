@@ -3,7 +3,7 @@ A utility code that can be used to request Data from services... <br/>
 
 This library is based on my exprience and need of working in the past company, taking many services in. I could handle any request so far using it, and every time I felt it doesn't support my need, i tried to expand it.
 
-[![NuGet](https://img.shields.io/nuget/v/InstaSharper.svg)](https://www.nuget.org/packages/InstaSharper/)
+[![NuGet](https://img.shields.io/badge/nuget-v2.0.0-blue)](https://www.nuget.org/packages/AdvancedRestHandler/)
 
 The requests can be done as simply as calling: 
 
