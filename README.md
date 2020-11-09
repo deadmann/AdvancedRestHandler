@@ -5,7 +5,7 @@ This library is based on my exprience and need of working in the past company, t
 
 [![NuGet](https://img.shields.io/badge/nuget-v2.0.0-blue)](https://www.nuget.org/packages/AdvancedRestHandler/)
 
-The requests can be done as simply as calling: 
+First install the package using following commands, or download it manually from release section...
 
 ```powershell
 Install-Package AdvancedRestHandler -Version 1.2.0
@@ -14,6 +14,9 @@ or
 ```sh
 dotnet add package AdvancedRestHandler --version 1.2.0
 ```
+
+Then you can use the library.
+The requests can be done as simply as calling: 
 
 ```C#
 AdvancedRestHandler arh = new AdvancedRestHandler([baseUrl], [fixEndOfUrl]);
