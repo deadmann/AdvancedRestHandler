@@ -7,6 +7,14 @@ This library is based on my exprience and need of working in the past company, t
 
 The requests can be done as simply as calling: 
 
+```powershell
+Install-Package AdvancedRestHandler -Version 1.2.0
+```
+or
+```sh
+dotnet add package AdvancedRestHandler --version 1.2.0
+```
+
 ```C#
 AdvancedRestHandler arh = new AdvancedRestHandler([baseUrl], [fixEndOfUrl]);
 TResponse response = arh.GetData<TResponse>(url, [options]);
