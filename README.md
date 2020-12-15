@@ -3,6 +3,19 @@ A utility code that can be used to request Data from services... <br/>
 
 This library is based on my exprience and need of working in the past company, taking many services in. I could handle any request so far using it, and every time I felt it doesn't support my need, i tried to expand it.
 
+[![NuGet](https://img.shields.io/badge/nuget-v1.2.0-blue)](https://www.nuget.org/packages/AdvancedRestHandler/)
+
+First install the package using following commands, or download it manually from release section...
+
+```powershell
+Install-Package AdvancedRestHandler -Version 1.2.0
+```
+or
+```sh
+dotnet add package AdvancedRestHandler --version 1.2.0
+```
+
+Then you can use the library.
 The requests can be done as simply as calling: 
 
 ```C#
