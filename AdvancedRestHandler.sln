@@ -10,6 +10,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Docs", "_Docs", "{7EDD1602
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdvancedRestHandler", "AdvancedRestHandler\AdvancedRestHandler.csproj", "{0B5EB03D-57EA-4762-B11E-0B886A1C51E2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{0E6EE31D-9284-4907-A7B4-D5B6814F3F95}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvancedRestHandler.Tests", "Tests\AdvancedRestHandler.Tests\AdvancedRestHandler.Tests.csproj", "{A6D90D71-603D-4D49-AEC9-9550E3A0A996}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,9 +24,16 @@ Global
 		{0B5EB03D-57EA-4762-B11E-0B886A1C51E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B5EB03D-57EA-4762-B11E-0B886A1C51E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B5EB03D-57EA-4762-B11E-0B886A1C51E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6D90D71-603D-4D49-AEC9-9550E3A0A996}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6D90D71-603D-4D49-AEC9-9550E3A0A996}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6D90D71-603D-4D49-AEC9-9550E3A0A996}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6D90D71-603D-4D49-AEC9-9550E3A0A996}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A6D90D71-603D-4D49-AEC9-9550E3A0A996} = {0E6EE31D-9284-4907-A7B4-D5B6814F3F95}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B6BBAC81-141A-4E44-B3B6-C7D319CC7421}
