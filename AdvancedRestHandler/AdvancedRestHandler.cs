@@ -9,6 +9,8 @@ using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -16,7 +18,7 @@ namespace Arh
 {
     /// <summary>
     /// Advanced Rest Handler class, A tools that simplifies API calls. <br />
-    /// This class by default handle json properties with PascalCase keys, for camelCase or score_case (snake_case) please refer to <see cref="ArhCamelCaseWrapper"/> and <see cref="ArhSnakeCaseWrapper"/>.
+    /// This class by default handle json properties with PascalCase keys, for camelCase or score_case (snake_case) please refer to <see cref="ArhCamelCaseWrapper"/> and <see cref="ArhSnakeCaseWrapper"/>
     /// </summary>
     public class AdvancedRestHandler
     {
@@ -102,6 +104,28 @@ namespace Arh
         /// The Whole or Partial-Variable Part of the URL<br/> 
         /// Start with no Slash (Normally Lead to Generation of A Wrong URL)
         /// </param>
+        /// <param name="headers">Provide custom headers that can be set within the request </param>
+        /// <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Returns Instance of Type <see cref="TResponse"/></returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public async Task<TResponse> GetDataAsync<TResponse>(string partialUrl, IEnumerable<KeyValuePair<string, IEnumerable<string>>> headers = null, bool useGZip = false, CancellationToken cancellationToken = default)
+        {
+            return await GetDataAsync<TResponse>(partialUrl, new RestHandlerRequestOptions
+            {
+                Headers = headers,
+                UseGZip = useGZip
+            }, cancellationToken);
+        }
+
+        /// <summary>
+        /// Sending a GET Request to the Server and Returns Data
+        /// </summary>
+        /// <typeparam name="TResponse">Type of Returning Model</typeparam>
+        /// <param name="partialUrl">
+        /// The Whole or Partial-Variable Part of the URL<br/> 
+        /// Start with no Slash (Normally Lead to Generation of A Wrong URL)
+        /// </param>
         /// <param name="options">Set of options that affect the way that the request will be sent</param>
         /// <returns>Returns Instance of Type <see cref="TResponse"/></returns>
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
@@ -132,6 +156,45 @@ namespace Arh
             return MakeResponse<TResponse>(null, jsonString, statusCode, options.FallbackModels);
         }
 
+        /// <summary>
+        /// Sending a GET Request to the Server and Returns Data
+        /// </summary>
+        /// <typeparam name="TResponse">Type of Returning Model</typeparam>
+        /// <param name="partialUrl">
+        /// The Whole or Partial-Variable Part of the URL<br/> 
+        /// Start with no Slash (Normally Lead to Generation of A Wrong URL)
+        /// </param>
+        /// <param name="options">Set of options that affect the way that the request will be sent</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Returns Instance of Type <see cref="TResponse"/></returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public async Task<TResponse> GetDataAsync<TResponse>(string partialUrl, RestHandlerRequestOptions options, CancellationToken cancellationToken = default)
+        {
+            string jsonString;
+            HttpStatusCode statusCode;
+
+            using (HttpClient client = GetHttpClient(options))
+            {
+                client.DefaultRequestHeaders.Accept.Clear();
+                //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                if (options.UseGZip)
+                {
+                    client.DefaultRequestHeaders.AcceptEncoding.Add(
+                        // ReSharper disable once StringLiteralTypo
+                        new System.Net.Http.Headers.StringWithQualityHeaderValue("gzip"));
+                }
+
+                SetHeaders(options.Headers, client);
+
+                var response = await client.GetAsync(partialUrl, cancellationToken);
+                statusCode = response.StatusCode;
+
+                jsonString = await GetResponseContentStringAsync(response.Content, options, cancellationToken);
+            }
+
+            return MakeResponse<TResponse>(null, jsonString, statusCode, options.FallbackModels);
+        }
+
         #endregion GET
 
         #region POST
@@ -155,6 +218,29 @@ namespace Arh
                 Headers = headers,
                 UseGZip = useGZip
             });
+        }
+
+        /// <summary>
+        /// Sending a POST Request to the Server Without a Request Model and Returns Data
+        /// </summary>
+        /// <typeparam name="TResponse">Type of Returning Model</typeparam>
+        /// <param name="partialUrl">
+        /// The Whole or Partial-Variable Part of the URL<br/> 
+        /// Start with no Slash (Normally Lead to Generation of A Wrong URL)
+        /// </param>
+        /// <param name="headers">Provide custom headers that can be set within the request </param>
+        /// <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Returns Instance of Type <see cref="TResponse"/></returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public async Task<TResponse> PostDataAsync<TResponse>(string partialUrl,
+            IEnumerable<KeyValuePair<string, IEnumerable<string>>> headers = null, bool useGZip = false, CancellationToken cancellationToken = default)
+        {
+            return await PostDataAsync<TResponse>(partialUrl, new RestHandlerRequestOptions
+            {
+                Headers = headers,
+                UseGZip = useGZip
+            }, cancellationToken);
         }
 
         /// <summary>
@@ -202,6 +288,51 @@ namespace Arh
         }
 
         /// <summary>
+        /// Sending a POST Request to the Server Without a Request Model and Returns Data
+        /// </summary>
+        /// <typeparam name="TResponse">Type of Returning Model</typeparam>
+        /// <param name="partialUrl">
+        /// The Whole or Partial-Variable Part of the URL<br/> 
+        /// Start with no Slash (Normally Lead to Generation of A Wrong URL)
+        /// </param>
+        /// <param name="options">Set of options that affect the way that the request will be sent</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Returns Instance of Type <see cref="TResponse"/></returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public async Task<TResponse> PostDataAsync<TResponse>(string partialUrl, RestHandlerRequestOptions options, CancellationToken cancellationToken = default)
+        {
+            string jsonString;
+            HttpStatusCode statusCode;
+
+            using (HttpClient client = GetHttpClient(options))
+            {
+                client.DefaultRequestHeaders.Accept.Clear();
+                //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                if (options.UseGZip)
+                {
+                    client.DefaultRequestHeaders.AcceptEncoding.Add(
+                        // ReSharper disable once StringLiteralTypo
+                        new System.Net.Http.Headers.StringWithQualityHeaderValue("gzip"));
+                }
+
+                SetHeaders(options.Headers, client);
+
+                //var content = new FormUrlEncodedContent(new[]
+                //{
+                //    new KeyValuePair("", "login")
+                //});
+
+                var content = new StringContent(string.Empty);
+                var response = await client.PostAsync(partialUrl, content, cancellationToken);
+                statusCode = response.StatusCode;
+
+                jsonString = await GetResponseContentStringAsync(response.Content, options, cancellationToken);
+            }
+
+            return MakeResponse<TResponse>(null, jsonString, statusCode, options.FallbackModels);
+        }
+
+        /// <summary>
         /// Sending a POST Request to the Server With Data that are not directly serializable
         /// </summary>
         /// <typeparam name="TResponse">Type of Returning Model</typeparam>
@@ -221,6 +352,29 @@ namespace Arh
                 UseGZip = useGZip,
                 Headers = headers
             });
+        }
+
+        /// <summary>
+        /// Sending a POST Request to the Server With Data that are not directly serializable
+        /// </summary>
+        /// <typeparam name="TResponse">Type of Returning Model</typeparam>
+        /// <param name="partialUrl">
+        /// The Whole or Partial-Variable Part of the URL<br/> 
+        /// Start with no Slash (Normally Lead to Generation of A Wrong URL)
+        /// </param>
+        /// <param name="content">Any type of content that are not serializable with our serializer</param>
+        /// <param name="headers">Provide custom headers that can be set within the request </param>
+        /// <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Returns Instance of Type <see cref="TResponse"/></returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public Task<TResponse> PostNonModelDataAsync<TResponse>(string partialUrl, HttpContent content, IEnumerable<KeyValuePair<string, IEnumerable<string>>> headers = null, bool useGZip = false, CancellationToken cancellationToken = default)
+        {
+            return PostNonModelDataAsync<TResponse>(partialUrl, content, new RestHandlerRequestOptions
+            {
+                UseGZip = useGZip,
+                Headers = headers
+            }, cancellationToken);
         }
 
         /// <summary>
@@ -263,6 +417,46 @@ namespace Arh
         }
 
         /// <summary>
+        /// Sending a POST Request to the Server With Data that are not directly serializable
+        /// </summary>
+        /// <typeparam name="TResponse">Type of Returning Model</typeparam>
+        /// <param name="partialUrl">
+        /// The Whole or Partial-Variable Part of the URL<br/> 
+        /// Start with no Slash (Normally Lead to Generation of A Wrong URL)
+        /// </param>
+        /// <param name="content">Any type of content that are not serializable with our serializer</param>
+        /// <param name="options">Set of options that affect the way that the request will be sent</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Returns Instance of Type <see cref="TResponse"/></returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+        public async Task<TResponse> PostNonModelDataAsync<TResponse>(string partialUrl, HttpContent content, RestHandlerRequestOptions options, CancellationToken cancellationToken = default)
+        {
+            string jsonString;
+            HttpStatusCode statusCode;
+
+            using (HttpClient client = GetHttpClient(options))
+            {
+                client.DefaultRequestHeaders.Accept.Clear();
+                if (options.UseGZip)
+                {
+                    client.DefaultRequestHeaders.AcceptEncoding.Add(
+                        // ReSharper disable once StringLiteralTypo
+                        new System.Net.Http.Headers.StringWithQualityHeaderValue("gzip"));
+                }
+
+                SetHeaders(options.Headers, client);
+
+                var response = await client.PostAsync(partialUrl, content, cancellationToken);
+                statusCode = response.StatusCode;
+
+                jsonString = await GetResponseContentStringAsync(response.Content, options, cancellationToken);
+            }
+
+            return MakeResponse<TResponse>(null, jsonString, statusCode, options.FallbackModels);
+        }
+
+        /// <summary>
         /// Sending a POST Request to the Server With a Request Model and Returns Data
         /// </summary>
         /// <typeparam name="TResponse">Type of Returning Model</typeparam>
@@ -286,6 +480,33 @@ namespace Arh
                 RequestType = requestType,
                 UseGZip = useGZip
             });
+        }
+
+        /// <summary>
+        /// Sending a POST Request to the Server With a Request Model and Returns Data
+        /// </summary>
+        /// <typeparam name="TResponse">Type of Returning Model</typeparam>
+        /// <typeparam name="TRequest">Type of Sending Model</typeparam>
+        /// <param name="partialUrl">
+        /// The Whole or Partial-Variable Part of the URL<br/> 
+        /// Start with no Slash (Normally Lead to Generation of A Wrong URL)
+        /// </param>
+        /// <param name="request">The Requesting Model Instance of Type <see cref="TRequest"/></param>
+        /// <param name="headers">Provide custom headers that can be set within the request </param>
+        /// <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+        /// <param name="requestType">Type of request, which affect the way that object will serialize (default json)</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Returns Instance of Type <see cref="TResponse"/></returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public async Task<TResponse> PostDataAsync<TResponse, TRequest>(string partialUrl, TRequest request, IEnumerable<KeyValuePair<string, IEnumerable<string>>> headers = null, bool useGZip = false, RequestType requestType = RequestType.Json, CancellationToken cancellationToken = default)
+            where TRequest : class, new()
+        {
+            return await PostDataAsync<TResponse, TRequest>(partialUrl, request, new RestHandlerRequestOptions
+            {
+                Headers = headers,
+                RequestType = requestType,
+                UseGZip = useGZip
+            }, cancellationToken);
         }
 
         /// <summary>
@@ -341,6 +562,60 @@ namespace Arh
             return MakeResponse<TResponse>(requestString, jsonString, statusCode, options.FallbackModels);
         }
 
+        /// <summary>
+        /// Sending a POST Request to the Server With a Request Model and Returns Data
+        /// </summary>
+        /// <typeparam name="TResponse">Type of Returning Model</typeparam>
+        /// <typeparam name="TRequest">Type of Sending Model</typeparam>
+        /// <param name="partialUrl">
+        /// The Whole or Partial-Variable Part of the URL<br/> 
+        /// Start with no Slash (Normally Lead to Generation of A Wrong URL)
+        /// </param>
+        /// <param name="request">The Requesting Model Instance of Type <see cref="TRequest"/></param>
+        /// <param name="options">Set of options that affect the way that the request will be sent</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Returns Instance of Type <see cref="TResponse"/></returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+        public async Task<TResponse> PostDataAsync<TResponse, TRequest>(string partialUrl, TRequest request, RestHandlerRequestOptions options, CancellationToken cancellationToken = default)
+            where TRequest : class, new()
+        {
+            string jsonString;
+            string requestString;
+            HttpStatusCode statusCode;
+
+            using (HttpClient client = GetHttpClient(options))
+            {
+                client.DefaultRequestHeaders.Accept.Clear();
+                //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                if (options.UseGZip)
+                {
+                    client.DefaultRequestHeaders.AcceptEncoding.Add(
+                        // ReSharper disable once StringLiteralTypo
+                        new System.Net.Http.Headers.StringWithQualityHeaderValue("gzip"));
+                }
+
+                SetHeaders(options.Headers, client);
+
+                //var content = new FormUrlEncodedContent(new[]
+                //{
+                //    new KeyValuePair("", "login")
+                //});
+
+                // ReSharper disable once RedundantAssignment
+                HttpContent content = null;
+                content = ObjectSerializer(request, options);
+                requestString = content == null ? null : await content.ReadAsStringAsync();
+
+                var response = await client.PostAsync(partialUrl, content, cancellationToken);
+                statusCode = response.StatusCode;
+
+                jsonString = await GetResponseContentStringAsync(response.Content, options, cancellationToken);
+            }
+
+            return MakeResponse<TResponse>(requestString, jsonString, statusCode, options.FallbackModels);
+        }
+
         #endregion POST
 
         #region PUT
@@ -390,6 +665,51 @@ namespace Arh
         }
 
         /// <summary>
+        /// Sending a PUT Request to the Server Without a Request Model and Returns Data
+        /// </summary>
+        /// <typeparam name="TResponse">Type of Returning Model</typeparam>
+        /// <param name="partialUrl">
+        /// The Whole or Partial-Variable Part of the URL<br/> 
+        /// Start with no Slash (Normally Lead to Generation of A Wrong URL)
+        /// </param>
+        /// <param name="options">Set of options that affect the way that the request will be sent</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Returns Instance of Type <see cref="TResponse"/></returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public async Task<TResponse> PutDataAsync<TResponse>(string partialUrl, RestHandlerRequestOptions options, CancellationToken cancellationToken = default)
+        {
+            string jsonString;
+            HttpStatusCode statusCode;
+
+            using (HttpClient client = GetHttpClient(options))
+            {
+                client.DefaultRequestHeaders.Accept.Clear();
+                //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                if (options.UseGZip)
+                {
+                    client.DefaultRequestHeaders.AcceptEncoding.Add(
+                        // ReSharper disable once StringLiteralTypo
+                        new System.Net.Http.Headers.StringWithQualityHeaderValue("gzip"));
+                }
+
+                SetHeaders(options.Headers, client);
+
+                //var content = new FormUrlEncodedContent(new[]
+                //{
+                //    new KeyValuePair("", "login")
+                //});
+
+                var content = new StringContent(string.Empty);
+                var response = await client.PutAsync(partialUrl, content, cancellationToken);
+                statusCode = response.StatusCode;
+
+                jsonString = await GetResponseContentStringAsync(response.Content, options, cancellationToken);
+            }
+
+            return MakeResponse<TResponse>(null, jsonString, statusCode, options.FallbackModels);
+        }
+
+        /// <summary>
         /// Sending a PUT Request to the Server With Data that are not directly serializable
         /// </summary>
         /// <typeparam name="TResponse">Type of Returning Model</typeparam>
@@ -409,6 +729,29 @@ namespace Arh
                 UseGZip = useGZip,
                 Headers = headers
             });
+        }
+
+        /// <summary>
+        /// Sending a PUT Request to the Server With Data that are not directly serializable
+        /// </summary>
+        /// <typeparam name="TResponse">Type of Returning Model</typeparam>
+        /// <param name="partialUrl">
+        /// The Whole or Partial-Variable Part of the URL<br/> 
+        /// Start with no Slash (Normally Lead to Generation of A Wrong URL)
+        /// </param>
+        /// <param name="content">Any type of content that are not serializable with our serializer</param>
+        /// <param name="headers">Provide custom headers that can be set within the request </param>
+        /// <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Returns Instance of Type <see cref="TResponse"/></returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public async Task<TResponse> PutNonModelDataAsync<TResponse>(string partialUrl, HttpContent content, IEnumerable<KeyValuePair<string, IEnumerable<string>>> headers = null, bool useGZip = false, CancellationToken cancellationToken = default)
+        {
+            return await PutNonModelDataAsync<TResponse>(partialUrl, content, new RestHandlerRequestOptions
+            {
+                UseGZip = useGZip,
+                Headers = headers
+            }, cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -451,6 +794,46 @@ namespace Arh
         }
 
         /// <summary>
+        /// Sending a PUT Request to the Server With Data that are not directly serializable
+        /// </summary>
+        /// <typeparam name="TResponse">Type of Returning Model</typeparam>
+        /// <param name="partialUrl">
+        /// The Whole or Partial-Variable Part of the URL<br/> 
+        /// Start with no Slash (Normally Lead to Generation of A Wrong URL)
+        /// </param>
+        /// <param name="content">Any type of content that are not serializable with our serializer</param>
+        /// <param name="options">Set of options that affect the way that the request will be sent</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Returns Instance of Type <see cref="TResponse"/></returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+        public async Task<TResponse> PutNonModelDataAsync<TResponse>(string partialUrl, HttpContent content, RestHandlerRequestOptions options, CancellationToken cancellationToken = default)
+        {
+            string jsonString;
+            HttpStatusCode statusCode;
+
+            using (HttpClient client = GetHttpClient(options))
+            {
+                client.DefaultRequestHeaders.Accept.Clear();
+                if (options.UseGZip)
+                {
+                    client.DefaultRequestHeaders.AcceptEncoding.Add(
+                        // ReSharper disable once StringLiteralTypo
+                        new System.Net.Http.Headers.StringWithQualityHeaderValue("gzip"));
+                }
+
+                SetHeaders(options.Headers, client);
+
+                var response = await client.PutAsync(partialUrl, content, cancellationToken);
+                statusCode = response.StatusCode;
+
+                jsonString = await GetResponseContentStringAsync(response.Content, options, cancellationToken);
+            }
+
+            return MakeResponse<TResponse>(null, jsonString, statusCode, options.FallbackModels);
+        }
+
+        /// <summary>
         /// Sending a PUT Request to the Server With a Request Model and Returns Data
         /// </summary>
         /// <typeparam name="TResponse">Type of Returning Model</typeparam>
@@ -474,6 +857,33 @@ namespace Arh
                 RequestType = requestType,
                 UseGZip = useGZip
             });
+        }
+
+        /// <summary>
+        /// Sending a PUT Request to the Server With a Request Model and Returns Data
+        /// </summary>
+        /// <typeparam name="TResponse">Type of Returning Model</typeparam>
+        /// <typeparam name="TRequest">Type of Sending Model</typeparam>
+        /// <param name="partialUrl">
+        /// The Whole or Partial-Variable Part of the URL<br/> 
+        /// Start with no Slash (Normally Lead to Generation of A Wrong URL)
+        /// </param>
+        /// <param name="request">The Requesting Model Instance of Type <see cref="TRequest"/></param>
+        /// <param name="headers">Provide custom headers that can be set within the request </param>
+        /// <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+        /// <param name="requestType">Type of request, which affect the way that object will serialize (default json)</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Returns Instance of Type <see cref="TResponse"/></returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public async Task<TResponse> PutDataAsync<TResponse, TRequest>(string partialUrl, TRequest request, IEnumerable<KeyValuePair<string, IEnumerable<string>>> headers = null, bool useGZip = false, RequestType requestType = RequestType.Json, CancellationToken cancellationToken = default)
+            where TRequest : class, new()
+        {
+            return await PutDataAsync<TResponse, TRequest>(partialUrl, request, new RestHandlerRequestOptions
+            {
+                Headers = headers,
+                RequestType = requestType,
+                UseGZip = useGZip
+            }, cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -529,6 +939,60 @@ namespace Arh
             return MakeResponse<TResponse>(requestString, jsonString, statusCode, options.FallbackModels);
         }
 
+        /// <summary>
+        /// Sending a PUT Request to the Server With a Request Model and Returns Data
+        /// </summary>
+        /// <typeparam name="TResponse">Type of Returning Model</typeparam>
+        /// <typeparam name="TRequest">Type of Sending Model</typeparam>
+        /// <param name="partialUrl">
+        /// The Whole or Partial-Variable Part of the URL<br/> 
+        /// Start with no Slash (Normally Lead to Generation of A Wrong URL)
+        /// </param>
+        /// <param name="request">The Requesting Model Instance of Type <see cref="TRequest"/></param>
+        /// <param name="options">Set of options that affect the way that the request will be sent</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Returns Instance of Type <see cref="TResponse"/></returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+        public async Task<TResponse> PutDataAsync<TResponse, TRequest>(string partialUrl, TRequest request, RestHandlerRequestOptions options, CancellationToken cancellationToken = default)
+            where TRequest : class, new()
+        {
+            string jsonString;
+            string requestString;
+            HttpStatusCode statusCode;
+
+            using (HttpClient client = GetHttpClient(options))
+            {
+                client.DefaultRequestHeaders.Accept.Clear();
+                //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                if (options.UseGZip)
+                {
+                    client.DefaultRequestHeaders.AcceptEncoding.Add(
+                        // ReSharper disable once StringLiteralTypo
+                        new System.Net.Http.Headers.StringWithQualityHeaderValue("gzip"));
+                }
+
+                SetHeaders(options.Headers, client);
+
+                //var content = new FormUrlEncodedContent(new[]
+                //{
+                //    new KeyValuePair("", "login")
+                //});
+
+                // ReSharper disable once RedundantAssignment
+                HttpContent content = null;
+                content = ObjectSerializer(request, options);
+                requestString = content == null ? null : await content.ReadAsStringAsync();
+
+                var response = await client.PutAsync(partialUrl, content, cancellationToken);
+                statusCode = response.StatusCode;
+
+                jsonString = await GetResponseContentStringAsync(response.Content, options, cancellationToken);
+            }
+
+            return MakeResponse<TResponse>(requestString, jsonString, statusCode, options.FallbackModels);
+        }
+
         #endregion PUT
 
         #region PATCH
@@ -568,12 +1032,63 @@ namespace Arh
                 //});
 
                 var content = new StringContent(string.Empty);
-                HttpRequestMessage reqMsg = new HttpRequestMessage(new HttpMethod("PATCH"), partialUrl);
-                reqMsg.Content = content;
+                HttpRequestMessage reqMsg = new HttpRequestMessage(new HttpMethod("PATCH"), partialUrl)
+                {
+                    Content = content
+                };
                 var response = client.SendAsync(reqMsg).Result;
                 statusCode = response.StatusCode;
 
                 jsonString = GetResponseContentString(response.Content, options);
+            }
+
+            return MakeResponse<TResponse>(null, jsonString, statusCode, options.FallbackModels);
+        }
+
+        /// <summary>
+        /// Sending a PATCH Request to the Server Without a Request Model and Returns Data
+        /// </summary>
+        /// <typeparam name="TResponse">Type of Returning Model</typeparam>
+        /// <param name="partialUrl">
+        /// The Whole or Partial-Variable Part of the URL<br/> 
+        /// Start with no Slash (Normally Lead to Generation of A Wrong URL)
+        /// </param>
+        /// <param name="options">Set of options that affect the way that the request will be sent</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Returns Instance of Type <see cref="TResponse"/></returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public async Task<TResponse> PatchDataAsync<TResponse>(string partialUrl, RestHandlerRequestOptions options, CancellationToken cancellationToken = default)
+        {
+            string jsonString;
+            HttpStatusCode statusCode;
+
+            using (HttpClient client = GetHttpClient(options))
+            {
+                client.DefaultRequestHeaders.Accept.Clear();
+                //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                if (options.UseGZip)
+                {
+                    client.DefaultRequestHeaders.AcceptEncoding.Add(
+                        // ReSharper disable once StringLiteralTypo
+                        new System.Net.Http.Headers.StringWithQualityHeaderValue("gzip"));
+                }
+
+                SetHeaders(options.Headers, client);
+
+                //var content = new FormUrlEncodedContent(new[]
+                //{
+                //    new KeyValuePair("", "login")
+                //});
+
+                var content = new StringContent(string.Empty);
+                HttpRequestMessage reqMsg = new HttpRequestMessage(new HttpMethod("PATCH"), partialUrl)
+                {
+                    Content = content
+                };
+                var response = await client.SendAsync(reqMsg, cancellationToken);
+                statusCode = response.StatusCode;
+
+                jsonString = await GetResponseContentStringAsync(response.Content, options, cancellationToken);
             }
 
             return MakeResponse<TResponse>(null, jsonString, statusCode, options.FallbackModels);
@@ -610,6 +1125,29 @@ namespace Arh
         /// Start with no Slash (Normally Lead to Generation of A Wrong URL)
         /// </param>
         /// <param name="content">Any type of content that are not serializable with our serializer</param>
+        /// <param name="headers">Provide custom headers that can be set within the request </param>
+        /// <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Returns Instance of Type <see cref="TResponse"/></returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public async Task<TResponse> PatchNonModelDataAsync<TResponse>(string partialUrl, HttpContent content, IEnumerable<KeyValuePair<string, IEnumerable<string>>> headers = null, bool useGZip = false, CancellationToken cancellationToken = default)
+        {
+            return await PatchNonModelDataAsync<TResponse>(partialUrl, content, new RestHandlerRequestOptions
+            {
+                UseGZip = useGZip,
+                Headers = headers
+            }, cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// Sending a PATCH Request to the Server With Data that are not directly serializable
+        /// </summary>
+        /// <typeparam name="TResponse">Type of Returning Model</typeparam>
+        /// <param name="partialUrl">
+        /// The Whole or Partial-Variable Part of the URL<br/> 
+        /// Start with no Slash (Normally Lead to Generation of A Wrong URL)
+        /// </param>
+        /// <param name="content">Any type of content that are not serializable with our serializer</param>
         /// <param name="options">Set of options that affect the way that the request will be sent</param>
         /// <returns>Returns Instance of Type <see cref="TResponse"/></returns>
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
@@ -631,12 +1169,58 @@ namespace Arh
 
                 SetHeaders(options.Headers, client);
 
-                HttpRequestMessage reqMsg = new HttpRequestMessage(new HttpMethod("PATCH"), partialUrl);
-                reqMsg.Content = content;
+                HttpRequestMessage reqMsg = new HttpRequestMessage(new HttpMethod("PATCH"), partialUrl)
+                {
+                    Content = content
+                };
                 var response = client.SendAsync(reqMsg).Result;
                 statusCode = response.StatusCode;
 
                 jsonString = GetResponseContentString(response.Content, options);
+            }
+
+            return MakeResponse<TResponse>(null, jsonString, statusCode, options.FallbackModels);
+        }
+
+        /// <summary>
+        /// Sending a PATCH Request to the Server With Data that are not directly serializable
+        /// </summary>
+        /// <typeparam name="TResponse">Type of Returning Model</typeparam>
+        /// <param name="partialUrl">
+        /// The Whole or Partial-Variable Part of the URL<br/> 
+        /// Start with no Slash (Normally Lead to Generation of A Wrong URL)
+        /// </param>
+        /// <param name="content">Any type of content that are not serializable with our serializer</param>
+        /// <param name="options">Set of options that affect the way that the request will be sent</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Returns Instance of Type <see cref="TResponse"/></returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+        public async Task<TResponse> PatchNonModelDataAsync<TResponse>(string partialUrl, HttpContent content, RestHandlerRequestOptions options, CancellationToken cancellationToken = default)
+        {
+            string jsonString;
+            HttpStatusCode statusCode;
+
+            using (HttpClient client = GetHttpClient(options))
+            {
+                client.DefaultRequestHeaders.Accept.Clear();
+                if (options.UseGZip)
+                {
+                    client.DefaultRequestHeaders.AcceptEncoding.Add(
+                        // ReSharper disable once StringLiteralTypo
+                        new System.Net.Http.Headers.StringWithQualityHeaderValue("gzip"));
+                }
+
+                SetHeaders(options.Headers, client);
+
+                HttpRequestMessage reqMsg = new HttpRequestMessage(new HttpMethod("PATCH"), partialUrl)
+                {
+                    Content = content
+                };
+                var response = await client.SendAsync(reqMsg, cancellationToken);
+                statusCode = response.StatusCode;
+
+                jsonString = await GetResponseContentStringAsync(response.Content, options, cancellationToken);
             }
 
             return MakeResponse<TResponse>(null, jsonString, statusCode, options.FallbackModels);
@@ -666,6 +1250,33 @@ namespace Arh
                 RequestType = requestType,
                 UseGZip = useGZip
             });
+        }
+
+        /// <summary>
+        /// Sending a PATCH Request to the Server With a Request Model and Returns Data
+        /// </summary>
+        /// <typeparam name="TResponse">Type of Returning Model</typeparam>
+        /// <typeparam name="TRequest">Type of Sending Model</typeparam>
+        /// <param name="partialUrl">
+        /// The Whole or Partial-Variable Part of the URL<br/> 
+        /// Start with no Slash (Normally Lead to Generation of A Wrong URL)
+        /// </param>
+        /// <param name="request">The Requesting Model Instance of Type <see cref="TRequest"/></param>
+        /// <param name="headers">Provide custom headers that can be set within the request </param>
+        /// <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+        /// <param name="requestType">Type of request, which affect the way that object will serialize (default json)</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Returns Instance of Type <see cref="TResponse"/></returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public async Task<TResponse> PatchDataAsync<TResponse, TRequest>(string partialUrl, TRequest request, IEnumerable<KeyValuePair<string, IEnumerable<string>>> headers = null, bool useGZip = false, RequestType requestType = RequestType.Json, CancellationToken cancellationToken = default)
+            where TRequest : class, new()
+        {
+            return await PatchDataAsync<TResponse, TRequest>(partialUrl, request, new RestHandlerRequestOptions
+            {
+                Headers = headers,
+                RequestType = requestType,
+                UseGZip = useGZip
+            }, cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -712,12 +1323,73 @@ namespace Arh
                 content = ObjectSerializer(request, options);
                 requestString = content?.ReadAsStringAsync().Result;
 
-                HttpRequestMessage reqMsg = new HttpRequestMessage(new HttpMethod("PATCH"), partialUrl);
-                reqMsg.Content = content;
+                HttpRequestMessage reqMsg =
+                    new HttpRequestMessage(new HttpMethod("PATCH"), partialUrl)
+                    {
+                        Content = content
+                    };
                 var response = client.SendAsync(reqMsg).Result;
                 statusCode = response.StatusCode;
 
                 jsonString = GetResponseContentString(response.Content, options);
+            }
+
+            return MakeResponse<TResponse>(requestString, jsonString, statusCode, options.FallbackModels);
+        }
+
+        /// <summary>
+        /// Sending a PATCH Request to the Server With a Request Model and Returns Data
+        /// </summary>
+        /// <typeparam name="TResponse">Type of Returning Model</typeparam>
+        /// <typeparam name="TRequest">Type of Sending Model</typeparam>
+        /// <param name="partialUrl">
+        /// The Whole or Partial-Variable Part of the URL<br/> 
+        /// Start with no Slash (Normally Lead to Generation of A Wrong URL)
+        /// </param>
+        /// <param name="request">The Requesting Model Instance of Type <see cref="TRequest"/></param>
+        /// <param name="options">Set of options that affect the way that the request will be sent</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Returns Instance of Type <see cref="TResponse"/></returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+        public async Task<TResponse> PatchDataAsync<TResponse, TRequest>(string partialUrl, TRequest request, RestHandlerRequestOptions options, CancellationToken cancellationToken = default)
+            where TRequest : class, new()
+        {
+            string jsonString;
+            string requestString;
+            HttpStatusCode statusCode;
+
+            using (HttpClient client = GetHttpClient(options))
+            {
+                client.DefaultRequestHeaders.Accept.Clear();
+                //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                if (options.UseGZip)
+                {
+                    client.DefaultRequestHeaders.AcceptEncoding.Add(
+                        // ReSharper disable once StringLiteralTypo
+                        new System.Net.Http.Headers.StringWithQualityHeaderValue("gzip"));
+                }
+
+                SetHeaders(options.Headers, client);
+
+                //var content = new FormUrlEncodedContent(new[]
+                //{
+                //    new KeyValuePair("", "login")
+                //});
+
+                // ReSharper disable once RedundantAssignment
+                HttpContent content = null;
+                content = ObjectSerializer(request, options);
+                requestString = content == null ? null : await content.ReadAsStringAsync();
+
+                HttpRequestMessage reqMsg = new HttpRequestMessage(new HttpMethod("PATCH"), partialUrl)
+                {
+                    Content = content
+                };
+                var response = await client.SendAsync(reqMsg, cancellationToken);
+                statusCode = response.StatusCode;
+
+                jsonString = await GetResponseContentStringAsync(response.Content, options, cancellationToken);
             }
 
             return MakeResponse<TResponse>(requestString, jsonString, statusCode, options.FallbackModels);
@@ -756,6 +1428,28 @@ namespace Arh
         /// The Whole or Partial-Variable Part of the URL<br/> 
         /// Start with no Slash (Normally Lead to Generation of A Wrong URL)
         /// </param>
+        /// <param name="headers">Provide custom headers that can be set within the request </param>
+        /// <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Returns Instance of Type <see cref="TResponse"/></returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public async Task<TResponse> DeleteDataAsync<TResponse>(string partialUrl, IEnumerable<KeyValuePair<string, IEnumerable<string>>> headers = null, bool useGZip = false, CancellationToken cancellationToken = default)
+        {
+            return await DeleteDataAsync<TResponse>(partialUrl, new RestHandlerRequestOptions
+            {
+                Headers = headers,
+                UseGZip = useGZip
+            }, cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// Sending a DELETE Request to the Server Without a Request Model and Returns Data
+        /// </summary>
+        /// <typeparam name="TResponse">Type of Returning Model</typeparam>
+        /// <param name="partialUrl">
+        /// The Whole or Partial-Variable Part of the URL<br/> 
+        /// Start with no Slash (Normally Lead to Generation of A Wrong URL)
+        /// </param>
         /// <param name="options">Set of options that affect the way that the request will be sent</param>
         /// <returns>Returns Instance of Type <see cref="TResponse"/></returns>
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
@@ -783,12 +1477,63 @@ namespace Arh
                 //});
 
                 var content = new StringContent(string.Empty);
-                HttpRequestMessage reqMsg = new HttpRequestMessage(HttpMethod.Delete, partialUrl);
-                reqMsg.Content = content;
+                HttpRequestMessage reqMsg = new HttpRequestMessage(HttpMethod.Delete, partialUrl)
+                {
+                    Content = content
+                };
                 var response = client.SendAsync(reqMsg).Result;
                 statusCode = response.StatusCode;
 
                 jsonString = GetResponseContentString(response.Content, options);
+            }
+
+            return MakeResponse<TResponse>(null, jsonString, statusCode, options.FallbackModels);
+        }
+
+        /// <summary>
+        /// Sending a DELETE Request to the Server Without a Request Model and Returns Data
+        /// </summary>
+        /// <typeparam name="TResponse">Type of Returning Model</typeparam>
+        /// <param name="partialUrl">
+        /// The Whole or Partial-Variable Part of the URL<br/> 
+        /// Start with no Slash (Normally Lead to Generation of A Wrong URL)
+        /// </param>
+        /// <param name="options">Set of options that affect the way that the request will be sent</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Returns Instance of Type <see cref="TResponse"/></returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public async Task<TResponse> DeleteDataAsync<TResponse>(string partialUrl, RestHandlerRequestOptions options, CancellationToken cancellationToken = default)
+        {
+            string jsonString;
+            HttpStatusCode statusCode;
+
+            using (HttpClient client = GetHttpClient(options))
+            {
+                client.DefaultRequestHeaders.Accept.Clear();
+                //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                if (options.UseGZip)
+                {
+                    client.DefaultRequestHeaders.AcceptEncoding.Add(
+                        // ReSharper disable once StringLiteralTypo
+                        new System.Net.Http.Headers.StringWithQualityHeaderValue("gzip"));
+                }
+
+                SetHeaders(options.Headers, client);
+
+                //var content = new FormUrlEncodedContent(new[]
+                //{
+                //    new KeyValuePair("", "login")
+                //});
+
+                var content = new StringContent(string.Empty);
+                HttpRequestMessage reqMsg = new HttpRequestMessage(HttpMethod.Delete, partialUrl)
+                {
+                    Content = content
+                };
+                var response = client.SendAsync(reqMsg, cancellationToken).Result;
+                statusCode = response.StatusCode;
+
+                jsonString = await GetResponseContentStringAsync(response.Content, options, cancellationToken);
             }
 
             return MakeResponse<TResponse>(null, jsonString, statusCode, options.FallbackModels);
@@ -825,6 +1570,29 @@ namespace Arh
         /// Start with no Slash (Normally Lead to Generation of A Wrong URL)
         /// </param>
         /// <param name="content">Any type of content that are not serializable with our serializer</param>
+        /// <param name="headers">Provide custom headers that can be set within the request </param>
+        /// <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Returns Instance of Type <see cref="TResponse"/></returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public async Task<TResponse> DeleteNonModelDataAsync<TResponse>(string partialUrl, HttpContent content, IEnumerable<KeyValuePair<string, IEnumerable<string>>> headers = null, bool useGZip = false, CancellationToken cancellationToken = default)
+        {
+            return await DeleteNonModelDataAsync<TResponse>(partialUrl, content, new RestHandlerRequestOptions
+            {
+                UseGZip = useGZip,
+                Headers = headers
+            }, cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// Sending a DELETE Request to the Server With Data that are not directly serializable
+        /// </summary>
+        /// <typeparam name="TResponse">Type of Returning Model</typeparam>
+        /// <param name="partialUrl">
+        /// The Whole or Partial-Variable Part of the URL<br/> 
+        /// Start with no Slash (Normally Lead to Generation of A Wrong URL)
+        /// </param>
+        /// <param name="content">Any type of content that are not serializable with our serializer</param>
         /// <param name="options">Set of options that affect the way that the request will be sent</param>
         /// <returns>Returns Instance of Type <see cref="TResponse"/></returns>
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
@@ -846,12 +1614,58 @@ namespace Arh
 
                 SetHeaders(options.Headers, client);
 
-                HttpRequestMessage reqMsg = new HttpRequestMessage(HttpMethod.Delete, partialUrl);
-                reqMsg.Content = content;
+                HttpRequestMessage reqMsg = new HttpRequestMessage(HttpMethod.Delete, partialUrl)
+                {
+                    Content = content
+                };
                 var response = client.SendAsync(reqMsg).Result;
                 statusCode = response.StatusCode;
 
                 jsonString = GetResponseContentString(response.Content, options);
+            }
+
+            return MakeResponse<TResponse>(null, jsonString, statusCode, options.FallbackModels);
+        }
+
+        /// <summary>
+        /// Sending a DELETE Request to the Server With Data that are not directly serializable
+        /// </summary>
+        /// <typeparam name="TResponse">Type of Returning Model</typeparam>
+        /// <param name="partialUrl">
+        /// The Whole or Partial-Variable Part of the URL<br/> 
+        /// Start with no Slash (Normally Lead to Generation of A Wrong URL)
+        /// </param>
+        /// <param name="content">Any type of content that are not serializable with our serializer</param>
+        /// <param name="options">Set of options that affect the way that the request will be sent</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Returns Instance of Type <see cref="TResponse"/></returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+        public async Task<TResponse> DeleteNonModelDataAsync<TResponse>(string partialUrl, HttpContent content, RestHandlerRequestOptions options, CancellationToken cancellationToken = default)
+        {
+            string jsonString;
+            HttpStatusCode statusCode;
+
+            using (HttpClient client = GetHttpClient(options))
+            {
+                client.DefaultRequestHeaders.Accept.Clear();
+                if (options.UseGZip)
+                {
+                    client.DefaultRequestHeaders.AcceptEncoding.Add(
+                        // ReSharper disable once StringLiteralTypo
+                        new System.Net.Http.Headers.StringWithQualityHeaderValue("gzip"));
+                }
+
+                SetHeaders(options.Headers, client);
+
+                HttpRequestMessage reqMsg = new HttpRequestMessage(HttpMethod.Delete, partialUrl)
+                {
+                    Content = content
+                };
+                var response = await client.SendAsync(reqMsg, cancellationToken);
+                statusCode = response.StatusCode;
+
+                jsonString = await GetResponseContentStringAsync(response.Content, options, cancellationToken);
             }
 
             return MakeResponse<TResponse>(null, jsonString, statusCode, options.FallbackModels);
@@ -881,6 +1695,33 @@ namespace Arh
                 RequestType = requestType,
                 UseGZip = useGZip
             });
+        }
+
+        /// <summary>
+        /// Sending a DELETE Request to the Server With a Request Model and Returns Data
+        /// </summary>
+        /// <typeparam name="TResponse">Type of Returning Model</typeparam>
+        /// <typeparam name="TRequest">Type of Sending Model</typeparam>
+        /// <param name="partialUrl">
+        /// The Whole or Partial-Variable Part of the URL<br/> 
+        /// Start with no Slash (Normally Lead to Generation of A Wrong URL)
+        /// </param>
+        /// <param name="request">The Requesting Model Instance of Type <see cref="TRequest"/></param>
+        /// <param name="headers">Provide custom headers that can be set within the request </param>
+        /// <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+        /// <param name="requestType">Type of request, which affect the way that object will serialize (default json)</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Returns Instance of Type <see cref="TResponse"/></returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public async Task<TResponse> DeleteDataAsync<TResponse, TRequest>(string partialUrl, TRequest request, IEnumerable<KeyValuePair<string, IEnumerable<string>>> headers = null, bool useGZip = false, RequestType requestType = RequestType.Json, CancellationToken cancellationToken = default)
+            where TRequest : class, new()
+        {
+            return await DeleteDataAsync<TResponse, TRequest>(partialUrl, request, new RestHandlerRequestOptions
+            {
+                Headers = headers,
+                RequestType = requestType,
+                UseGZip = useGZip
+            }, cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -927,12 +1768,72 @@ namespace Arh
                 content = ObjectSerializer(request, options);
                 requestString = content?.ReadAsStringAsync().Result;
 
-                HttpRequestMessage reqMsg = new HttpRequestMessage(HttpMethod.Delete, partialUrl);
-                reqMsg.Content = content;
+                HttpRequestMessage reqMsg = new HttpRequestMessage(HttpMethod.Delete, partialUrl)
+                {
+                    Content = content
+                };
                 var response = client.SendAsync(reqMsg).Result;
                 statusCode = response.StatusCode;
 
                 jsonString = GetResponseContentString(response.Content, options);
+            }
+
+            return MakeResponse<TResponse>(requestString, jsonString, statusCode, options.FallbackModels);
+        }
+
+        /// <summary>
+        /// Sending a DELETE Request to the Server With a Request Model and Returns Data
+        /// </summary>
+        /// <typeparam name="TResponse">Type of Returning Model</typeparam>
+        /// <typeparam name="TRequest">Type of Sending Model</typeparam>
+        /// <param name="partialUrl">
+        /// The Whole or Partial-Variable Part of the URL<br/> 
+        /// Start with no Slash (Normally Lead to Generation of A Wrong URL)
+        /// </param>
+        /// <param name="request">The Requesting Model Instance of Type <see cref="TRequest"/></param>
+        /// <param name="options">Set of options that affect the way that the request will be sent</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Returns Instance of Type <see cref="TResponse"/></returns>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+        public async Task<TResponse> DeleteDataAsync<TResponse, TRequest>(string partialUrl, TRequest request, RestHandlerRequestOptions options, CancellationToken cancellationToken = default)
+            where TRequest : class, new()
+        {
+            string jsonString;
+            string requestString;
+            HttpStatusCode statusCode;
+
+            using (HttpClient client = GetHttpClient(options))
+            {
+                client.DefaultRequestHeaders.Accept.Clear();
+                //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                if (options.UseGZip)
+                {
+                    client.DefaultRequestHeaders.AcceptEncoding.Add(
+                        // ReSharper disable once StringLiteralTypo
+                        new System.Net.Http.Headers.StringWithQualityHeaderValue("gzip"));
+                }
+
+                SetHeaders(options.Headers, client);
+
+                //var content = new FormUrlEncodedContent(new[]
+                //{
+                //    new KeyValuePair("", "login")
+                //});
+
+                // ReSharper disable once RedundantAssignment
+                HttpContent content = null;
+                content = ObjectSerializer(request, options);
+                requestString = content == null ? null : await content.ReadAsStringAsync();
+
+                HttpRequestMessage reqMsg = new HttpRequestMessage(HttpMethod.Delete, partialUrl)
+                {
+                    Content = content
+                };
+                var response = await client.SendAsync(reqMsg, cancellationToken);
+                statusCode = response.StatusCode;
+
+                jsonString = await GetResponseContentStringAsync(response.Content, options, cancellationToken);
             }
 
             return MakeResponse<TResponse>(requestString, jsonString, statusCode, options.FallbackModels);
@@ -1172,7 +2073,7 @@ namespace Arh
         /// <param name="content"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        private string GetResponseContentString(HttpContent content, RestHandlerRequestOptions options)
+        private static string GetResponseContentString(HttpContent content, RestHandlerRequestOptions options)
         {
             string result;
             // ReSharper disable once StringLiteralTypo
@@ -1196,6 +2097,52 @@ namespace Arh
                     : new StreamReader(stream, options.StringResponseEncoding))
                 {
                     result = reader.ReadToEnd();
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Get string content from HttpContent of the response object
+        /// </summary>
+        /// <param name="content"></param>
+        /// <param name="options"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private static async Task<string> GetResponseContentStringAsync(HttpContent content, RestHandlerRequestOptions options, CancellationToken cancellationToken = default)
+        {
+            if (cancellationToken.IsCancellationRequested)
+                throw new TaskCanceledException();
+
+            string result;
+
+            // ReSharper disable once StringLiteralTypo
+            if (content.Headers.ContentEncoding.Any(x => x == "gzip"))
+            {
+                using (Stream stream = await content.ReadAsStreamAsync())
+                using (Stream decompressed = new GZipStream(stream, CompressionMode.Decompress))
+                using (StreamReader reader = options.StringResponseEncoding == null
+                    ? new StreamReader(decompressed)
+                    : new StreamReader(decompressed, options.StringResponseEncoding))
+                {
+                    if(cancellationToken.IsCancellationRequested)
+                        throw new TaskCanceledException();
+
+                    result = await reader.ReadToEndAsync();
+                }
+            }
+            else
+            {
+                //requestString = content == null? null: await content.ReadAsStringAsync();
+                using (Stream stream = await content.ReadAsStreamAsync())
+                using (StreamReader reader = options.StringResponseEncoding == null
+                    ? new StreamReader(stream)
+                    : new StreamReader(stream, options.StringResponseEncoding))
+                {
+                    if (cancellationToken.IsCancellationRequested)
+                        throw new TaskCanceledException();
+
+                    result = await reader.ReadToEndAsync();
                 }
             }
             return result;
