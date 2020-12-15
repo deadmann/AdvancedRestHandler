@@ -8,7 +8,7 @@ using Newtonsoft.Json.Serialization;
 namespace Arh
 {
     /// <summary>
-    /// Provides an instance of type <see cref="AdvancedRestHandler">AdvancedRestHandler</see> which is customized to handle <a href="https://en.wikipedia.org/wiki/Snake_case">SnakeCase</a> property naming
+    /// Provides an instance of type <see cref="AdvancedRestHandler">AdvancedRestHandler</see> which is customized to handle <a href="https://en.wikipedia.org/wiki/Snake_case">snake_case</a> property naming
     /// </summary>
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     [SuppressMessage("ReSharper", "RedundantBaseConstructorCall")]

@@ -15,7 +15,8 @@ using Newtonsoft.Json.Linq;
 namespace Arh
 {
     /// <summary>
-    /// Advanced Rest Handler class, A tools that simplifies API calls.
+    /// Advanced Rest Handler class, A tools that simplifies API calls. <br />
+    /// This class by default handle json properties with PascalCase keys, for camelCase or score_case (snake_case) please refer to <see cref="ArhCamelCaseWrapper"/> and <see cref="ArhSnakeCaseWrapper"/>.
     /// </summary>
     public class AdvancedRestHandler
     {
