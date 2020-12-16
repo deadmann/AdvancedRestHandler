@@ -6,7 +6,8 @@
     <members>
         <member name="T:Arh.AdvancedRestHandler">
             <summary>
-            Advanced Rest Handler class, A tools that simplifies API calls.
+            Advanced Rest Handler class, A tools that simplifies API calls. <br />
+            This class by default handle json properties with PascalCase keys, for camelCase or score_case (snake_case) please refer to <see cref="T:Arh.ArhCamelCaseWrapper"/> and <see cref="T:Arh.ArhSnakeCaseWrapper"/>
             </summary>
         </member>
         <member name="P:Arh.AdvancedRestHandler.ClientDefaultHeaders">
@@ -52,6 +53,20 @@
             <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
             <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
         </member>
+        <member name="M:Arh.AdvancedRestHandler.GetDataAsync``1(System.String,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            Sending a GET Request to the Server and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="headers">Provide custom headers that can be set within the request </param>
+            <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+            <param name="cancellationToken"></param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
         <member name="M:Arh.AdvancedRestHandler.GetData``1(System.String,Arh.RestHandlerRequestOptions)">
             <summary>
             Sending a GET Request to the Server and Returns Data
@@ -62,6 +77,19 @@
             Start with no Slash (Normally Lead to Generation of A Wrong URL)
             </param>
             <param name="options">Set of options that affect the way that the request will be sent</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.GetDataAsync``1(System.String,Arh.RestHandlerRequestOptions,System.Threading.CancellationToken)">
+            <summary>
+            Sending a GET Request to the Server and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="options">Set of options that affect the way that the request will be sent</param>
+            <param name="cancellationToken"></param>
             <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
         </member>
         <member name="M:Arh.AdvancedRestHandler.PostData``1(System.String,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean)">
@@ -77,6 +105,20 @@
             <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
             <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
         </member>
+        <member name="M:Arh.AdvancedRestHandler.PostDataAsync``1(System.String,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            Sending a POST Request to the Server Without a Request Model and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="headers">Provide custom headers that can be set within the request </param>
+            <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+            <param name="cancellationToken"></param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
         <member name="M:Arh.AdvancedRestHandler.PostData``1(System.String,Arh.RestHandlerRequestOptions)">
             <summary>
             Sending a POST Request to the Server Without a Request Model and Returns Data
@@ -87,6 +129,19 @@
             Start with no Slash (Normally Lead to Generation of A Wrong URL)
             </param>
             <param name="options">Set of options that affect the way that the request will be sent</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.PostDataAsync``1(System.String,Arh.RestHandlerRequestOptions,System.Threading.CancellationToken)">
+            <summary>
+            Sending a POST Request to the Server Without a Request Model and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="options">Set of options that affect the way that the request will be sent</param>
+            <param name="cancellationToken"></param>
             <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
         </member>
         <member name="M:Arh.AdvancedRestHandler.PostNonModelData``1(System.String,System.Net.Http.HttpContent,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean)">
@@ -103,6 +158,21 @@
             <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
             <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
         </member>
+        <member name="M:Arh.AdvancedRestHandler.PostNonModelDataAsync``1(System.String,System.Net.Http.HttpContent,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            Sending a POST Request to the Server With Data that are not directly serializable
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="content">Any type of content that are not serializable with our serializer</param>
+            <param name="headers">Provide custom headers that can be set within the request </param>
+            <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+            <param name="cancellationToken"></param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
         <member name="M:Arh.AdvancedRestHandler.PostNonModelData``1(System.String,System.Net.Http.HttpContent,Arh.RestHandlerRequestOptions)">
             <summary>
             Sending a POST Request to the Server With Data that are not directly serializable
@@ -114,6 +184,20 @@
             </param>
             <param name="content">Any type of content that are not serializable with our serializer</param>
             <param name="options">Set of options that affect the way that the request will be sent</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.PostNonModelDataAsync``1(System.String,System.Net.Http.HttpContent,Arh.RestHandlerRequestOptions,System.Threading.CancellationToken)">
+            <summary>
+            Sending a POST Request to the Server With Data that are not directly serializable
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="content">Any type of content that are not serializable with our serializer</param>
+            <param name="options">Set of options that affect the way that the request will be sent</param>
+            <param name="cancellationToken"></param>
             <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
         </member>
         <member name="M:Arh.AdvancedRestHandler.PostData``2(System.String,``1,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean,Arh.RequestType)">
@@ -132,6 +216,23 @@
             <param name="requestType">Type of request, which affect the way that object will serialize (default json)</param>
             <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
         </member>
+        <member name="M:Arh.AdvancedRestHandler.PostDataAsync``2(System.String,``1,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean,Arh.RequestType,System.Threading.CancellationToken)">
+            <summary>
+            Sending a POST Request to the Server With a Request Model and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <typeparam name="TRequest">Type of Sending Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="request">The Requesting Model Instance of Type <see cref="!:TRequest"/></param>
+            <param name="headers">Provide custom headers that can be set within the request </param>
+            <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+            <param name="requestType">Type of request, which affect the way that object will serialize (default json)</param>
+            <param name="cancellationToken"></param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
         <member name="M:Arh.AdvancedRestHandler.PostData``2(System.String,``1,Arh.RestHandlerRequestOptions)">
             <summary>
             Sending a POST Request to the Server With a Request Model and Returns Data
@@ -146,6 +247,21 @@
             <param name="options">Set of options that affect the way that the request will be sent</param>
             <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
         </member>
+        <member name="M:Arh.AdvancedRestHandler.PostDataAsync``2(System.String,``1,Arh.RestHandlerRequestOptions,System.Threading.CancellationToken)">
+            <summary>
+            Sending a POST Request to the Server With a Request Model and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <typeparam name="TRequest">Type of Sending Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="request">The Requesting Model Instance of Type <see cref="!:TRequest"/></param>
+            <param name="options">Set of options that affect the way that the request will be sent</param>
+            <param name="cancellationToken"></param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
         <member name="M:Arh.AdvancedRestHandler.PutData``1(System.String,Arh.RestHandlerRequestOptions)">
             <summary>
             Sending a PUT Request to the Server Without a Request Model and Returns Data
@@ -156,6 +272,19 @@
             Start with no Slash (Normally Lead to Generation of A Wrong URL)
             </param>
             <param name="options">Set of options that affect the way that the request will be sent</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.PutDataAsync``1(System.String,Arh.RestHandlerRequestOptions,System.Threading.CancellationToken)">
+            <summary>
+            Sending a PUT Request to the Server Without a Request Model and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="options">Set of options that affect the way that the request will be sent</param>
+            <param name="cancellationToken"></param>
             <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
         </member>
         <member name="M:Arh.AdvancedRestHandler.PutNonModelData``1(System.String,System.Net.Http.HttpContent,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean)">
@@ -172,6 +301,21 @@
             <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
             <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
         </member>
+        <member name="M:Arh.AdvancedRestHandler.PutNonModelDataAsync``1(System.String,System.Net.Http.HttpContent,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            Sending a PUT Request to the Server With Data that are not directly serializable
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="content">Any type of content that are not serializable with our serializer</param>
+            <param name="headers">Provide custom headers that can be set within the request </param>
+            <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+            <param name="cancellationToken"></param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
         <member name="M:Arh.AdvancedRestHandler.PutNonModelData``1(System.String,System.Net.Http.HttpContent,Arh.RestHandlerRequestOptions)">
             <summary>
             Sending a PUT Request to the Server With Data that are not directly serializable
@@ -183,6 +327,20 @@
             </param>
             <param name="content">Any type of content that are not serializable with our serializer</param>
             <param name="options">Set of options that affect the way that the request will be sent</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.PutNonModelDataAsync``1(System.String,System.Net.Http.HttpContent,Arh.RestHandlerRequestOptions,System.Threading.CancellationToken)">
+            <summary>
+            Sending a PUT Request to the Server With Data that are not directly serializable
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="content">Any type of content that are not serializable with our serializer</param>
+            <param name="options">Set of options that affect the way that the request will be sent</param>
+            <param name="cancellationToken"></param>
             <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
         </member>
         <member name="M:Arh.AdvancedRestHandler.PutData``2(System.String,``1,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean,Arh.RequestType)">
@@ -201,6 +359,23 @@
             <param name="requestType">Type of request, which affect the way that object will serialize (default json)</param>
             <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
         </member>
+        <member name="M:Arh.AdvancedRestHandler.PutDataAsync``2(System.String,``1,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean,Arh.RequestType,System.Threading.CancellationToken)">
+            <summary>
+            Sending a PUT Request to the Server With a Request Model and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <typeparam name="TRequest">Type of Sending Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="request">The Requesting Model Instance of Type <see cref="!:TRequest"/></param>
+            <param name="headers">Provide custom headers that can be set within the request </param>
+            <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+            <param name="requestType">Type of request, which affect the way that object will serialize (default json)</param>
+            <param name="cancellationToken"></param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
         <member name="M:Arh.AdvancedRestHandler.PutData``2(System.String,``1,Arh.RestHandlerRequestOptions)">
             <summary>
             Sending a PUT Request to the Server With a Request Model and Returns Data
@@ -215,6 +390,21 @@
             <param name="options">Set of options that affect the way that the request will be sent</param>
             <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
         </member>
+        <member name="M:Arh.AdvancedRestHandler.PutDataAsync``2(System.String,``1,Arh.RestHandlerRequestOptions,System.Threading.CancellationToken)">
+            <summary>
+            Sending a PUT Request to the Server With a Request Model and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <typeparam name="TRequest">Type of Sending Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="request">The Requesting Model Instance of Type <see cref="!:TRequest"/></param>
+            <param name="options">Set of options that affect the way that the request will be sent</param>
+            <param name="cancellationToken"></param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
         <member name="M:Arh.AdvancedRestHandler.PatchData``1(System.String,Arh.RestHandlerRequestOptions)">
             <summary>
             Sending a PATCH Request to the Server Without a Request Model and Returns Data
@@ -225,6 +415,19 @@
             Start with no Slash (Normally Lead to Generation of A Wrong URL)
             </param>
             <param name="options">Set of options that affect the way that the request will be sent</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.PatchDataAsync``1(System.String,Arh.RestHandlerRequestOptions,System.Threading.CancellationToken)">
+            <summary>
+            Sending a PATCH Request to the Server Without a Request Model and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="options">Set of options that affect the way that the request will be sent</param>
+            <param name="cancellationToken"></param>
             <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
         </member>
         <member name="M:Arh.AdvancedRestHandler.PatchNonModelData``1(System.String,System.Net.Http.HttpContent,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean)">
@@ -241,6 +444,21 @@
             <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
             <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
         </member>
+        <member name="M:Arh.AdvancedRestHandler.PatchNonModelDataAsync``1(System.String,System.Net.Http.HttpContent,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            Sending a PATCH Request to the Server With Data that are not directly serializable
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="content">Any type of content that are not serializable with our serializer</param>
+            <param name="headers">Provide custom headers that can be set within the request </param>
+            <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+            <param name="cancellationToken"></param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
         <member name="M:Arh.AdvancedRestHandler.PatchNonModelData``1(System.String,System.Net.Http.HttpContent,Arh.RestHandlerRequestOptions)">
             <summary>
             Sending a PATCH Request to the Server With Data that are not directly serializable
@@ -252,6 +470,20 @@
             </param>
             <param name="content">Any type of content that are not serializable with our serializer</param>
             <param name="options">Set of options that affect the way that the request will be sent</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.PatchNonModelDataAsync``1(System.String,System.Net.Http.HttpContent,Arh.RestHandlerRequestOptions,System.Threading.CancellationToken)">
+            <summary>
+            Sending a PATCH Request to the Server With Data that are not directly serializable
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="content">Any type of content that are not serializable with our serializer</param>
+            <param name="options">Set of options that affect the way that the request will be sent</param>
+            <param name="cancellationToken"></param>
             <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
         </member>
         <member name="M:Arh.AdvancedRestHandler.PatchData``2(System.String,``1,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean,Arh.RequestType)">
@@ -270,6 +502,23 @@
             <param name="requestType">Type of request, which affect the way that object will serialize (default json)</param>
             <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
         </member>
+        <member name="M:Arh.AdvancedRestHandler.PatchDataAsync``2(System.String,``1,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean,Arh.RequestType,System.Threading.CancellationToken)">
+            <summary>
+            Sending a PATCH Request to the Server With a Request Model and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <typeparam name="TRequest">Type of Sending Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="request">The Requesting Model Instance of Type <see cref="!:TRequest"/></param>
+            <param name="headers">Provide custom headers that can be set within the request </param>
+            <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+            <param name="requestType">Type of request, which affect the way that object will serialize (default json)</param>
+            <param name="cancellationToken"></param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
         <member name="M:Arh.AdvancedRestHandler.PatchData``2(System.String,``1,Arh.RestHandlerRequestOptions)">
             <summary>
             Sending a PATCH Request to the Server With a Request Model and Returns Data
@@ -282,6 +531,21 @@
             </param>
             <param name="request">The Requesting Model Instance of Type <see cref="!:TRequest"/></param>
             <param name="options">Set of options that affect the way that the request will be sent</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.PatchDataAsync``2(System.String,``1,Arh.RestHandlerRequestOptions,System.Threading.CancellationToken)">
+            <summary>
+            Sending a PATCH Request to the Server With a Request Model and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <typeparam name="TRequest">Type of Sending Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="request">The Requesting Model Instance of Type <see cref="!:TRequest"/></param>
+            <param name="options">Set of options that affect the way that the request will be sent</param>
+            <param name="cancellationToken"></param>
             <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
         </member>
         <member name="M:Arh.AdvancedRestHandler.DeleteData``1(System.String,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean)">
@@ -297,6 +561,20 @@
             <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
             <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
         </member>
+        <member name="M:Arh.AdvancedRestHandler.DeleteDataAsync``1(System.String,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            Sending a DELETE Request to the Server Without a Request Model and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="headers">Provide custom headers that can be set within the request </param>
+            <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+            <param name="cancellationToken"></param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
         <member name="M:Arh.AdvancedRestHandler.DeleteData``1(System.String,Arh.RestHandlerRequestOptions)">
             <summary>
             Sending a DELETE Request to the Server Without a Request Model and Returns Data
@@ -307,6 +585,19 @@
             Start with no Slash (Normally Lead to Generation of A Wrong URL)
             </param>
             <param name="options">Set of options that affect the way that the request will be sent</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.DeleteDataAsync``1(System.String,Arh.RestHandlerRequestOptions,System.Threading.CancellationToken)">
+            <summary>
+            Sending a DELETE Request to the Server Without a Request Model and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="options">Set of options that affect the way that the request will be sent</param>
+            <param name="cancellationToken"></param>
             <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
         </member>
         <member name="M:Arh.AdvancedRestHandler.DeleteNonModelData``1(System.String,System.Net.Http.HttpContent,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean)">
@@ -323,6 +614,21 @@
             <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
             <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
         </member>
+        <member name="M:Arh.AdvancedRestHandler.DeleteNonModelDataAsync``1(System.String,System.Net.Http.HttpContent,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            Sending a DELETE Request to the Server With Data that are not directly serializable
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="content">Any type of content that are not serializable with our serializer</param>
+            <param name="headers">Provide custom headers that can be set within the request </param>
+            <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+            <param name="cancellationToken"></param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
         <member name="M:Arh.AdvancedRestHandler.DeleteNonModelData``1(System.String,System.Net.Http.HttpContent,Arh.RestHandlerRequestOptions)">
             <summary>
             Sending a DELETE Request to the Server With Data that are not directly serializable
@@ -334,6 +640,20 @@
             </param>
             <param name="content">Any type of content that are not serializable with our serializer</param>
             <param name="options">Set of options that affect the way that the request will be sent</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.DeleteNonModelDataAsync``1(System.String,System.Net.Http.HttpContent,Arh.RestHandlerRequestOptions,System.Threading.CancellationToken)">
+            <summary>
+            Sending a DELETE Request to the Server With Data that are not directly serializable
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="content">Any type of content that are not serializable with our serializer</param>
+            <param name="options">Set of options that affect the way that the request will be sent</param>
+            <param name="cancellationToken"></param>
             <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
         </member>
         <member name="M:Arh.AdvancedRestHandler.DeleteData``2(System.String,``1,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean,Arh.RequestType)">
@@ -352,6 +672,23 @@
             <param name="requestType">Type of request, which affect the way that object will serialize (default json)</param>
             <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
         </member>
+        <member name="M:Arh.AdvancedRestHandler.DeleteDataAsync``2(System.String,``1,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean,Arh.RequestType,System.Threading.CancellationToken)">
+            <summary>
+            Sending a DELETE Request to the Server With a Request Model and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <typeparam name="TRequest">Type of Sending Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="request">The Requesting Model Instance of Type <see cref="!:TRequest"/></param>
+            <param name="headers">Provide custom headers that can be set within the request </param>
+            <param name="useGZip">If We Should Decode Returning Data Using GZip Method</param>
+            <param name="requestType">Type of request, which affect the way that object will serialize (default json)</param>
+            <param name="cancellationToken"></param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
         <member name="M:Arh.AdvancedRestHandler.DeleteData``2(System.String,``1,Arh.RestHandlerRequestOptions)">
             <summary>
             Sending a DELETE Request to the Server With a Request Model and Returns Data
@@ -364,6 +701,21 @@
             </param>
             <param name="request">The Requesting Model Instance of Type <see cref="!:TRequest"/></param>
             <param name="options">Set of options that affect the way that the request will be sent</param>
+            <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.DeleteDataAsync``2(System.String,``1,Arh.RestHandlerRequestOptions,System.Threading.CancellationToken)">
+            <summary>
+            Sending a DELETE Request to the Server With a Request Model and Returns Data
+            </summary>
+            <typeparam name="TResponse">Type of Returning Model</typeparam>
+            <typeparam name="TRequest">Type of Sending Model</typeparam>
+            <param name="partialUrl">
+            The Whole or Partial-Variable Part of the URL<br/> 
+            Start with no Slash (Normally Lead to Generation of A Wrong URL)
+            </param>
+            <param name="request">The Requesting Model Instance of Type <see cref="!:TRequest"/></param>
+            <param name="options">Set of options that affect the way that the request will be sent</param>
+            <param name="cancellationToken"></param>
             <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
         </member>
         <member name="M:Arh.AdvancedRestHandler.GetHttpClient(Arh.RestHandlerRequestOptions)">
@@ -404,6 +756,15 @@
             </summary>
             <param name="content"></param>
             <param name="options"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.GetResponseContentStringAsync(System.Net.Http.HttpContent,Arh.RestHandlerRequestOptions,System.Threading.CancellationToken)">
+            <summary>
+            Get string content from HttpContent of the response object
+            </summary>
+            <param name="content"></param>
+            <param name="options"></param>
+            <param name="cancellationToken"></param>
             <returns></returns>
         </member>
         <member name="M:Arh.AdvancedRestHandler.DeserializeToType(System.String,System.Type)">
@@ -457,7 +818,7 @@
         </member>
         <member name="T:Arh.ArhCamelCaseWrapper">
             <summary>
-            Provides an instance of type <see cref="T:Arh.AdvancedRestHandler">AdvancedRestHandler</see> which is customized to handle <a href="https://en.wikipedia.org/wiki/Camel_case">CamelCase</a> property naming
+            Provides an instance of type <see cref="T:Arh.AdvancedRestHandler">AdvancedRestHandler</see> which is customized to handle <a href="https://en.wikipedia.org/wiki/Camel_case">camelCase</a> property naming
             </summary>
         </member>
         <member name="M:Arh.ArhCamelCaseWrapper.#ctor(Arh.OverrideDirection)">
@@ -543,7 +904,7 @@
         </member>
         <member name="T:Arh.ArhSnakeCaseWrapper">
             <summary>
-            Provides an instance of type <see cref="T:Arh.AdvancedRestHandler">AdvancedRestHandler</see> which is customized to handle <a href="https://en.wikipedia.org/wiki/Snake_case">SnakeCase</a> property naming
+            Provides an instance of type <see cref="T:Arh.AdvancedRestHandler">AdvancedRestHandler</see> which is customized to handle <a href="https://en.wikipedia.org/wiki/Snake_case">snake_case</a> property naming
             </summary>
         </member>
         <member name="M:Arh.ArhSnakeCaseWrapper.#ctor(Arh.OverrideDirection)">
