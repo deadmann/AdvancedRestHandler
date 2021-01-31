@@ -18,7 +18,7 @@ namespace Arh
 {
     /// <summary>
     /// Advanced Rest Handler class, A tools that simplifies API calls. <br />
-    /// This class by default handle json properties with PascalCase keys, for camelCase or score_case (snake_case) please refer to <see cref="ArhCamelCaseWrapper"/> and <see cref="ArhSnakeCaseWrapper"/>
+    /// This class by default handle json properties with any case you use in name handling, but if you write standard C# code, for properties it will be PascalCase keys, for camelCase or score_case (snake_case) please refer to <see cref="ArhCamelCaseWrapper"/> and <see cref="ArhSnakeCaseWrapper"/>
     /// </summary>
     public class AdvancedRestHandler
     {
