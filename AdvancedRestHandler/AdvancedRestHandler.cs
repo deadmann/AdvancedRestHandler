@@ -68,9 +68,9 @@ namespace Arh
         /// </summary>
         /// <param name="baseUrl"></param>
         /// <param name="options"></param>
-        public AdvancedRestHandler(string baseUrl, RestHandlerInitializerOptions options): this(baseUrl, options.FixEndOfUrl)
+        public AdvancedRestHandler(string baseUrl, RestHandlerInitializerOptions options) : this(baseUrl, options.FixEndOfUrl)
         {
-            
+
         }
 
         #region GET
@@ -1975,26 +1975,26 @@ namespace Arh
                     {
                         result = DeserializeToObject<TResponse>(responseString);
                     }
-                    //It's Special Deserialization using RhResponse
+                    //It's Special Deserialization using ArhResponse
                     else
                     {
-                        //It contains just string value, And will sits over RhStringResponse (So we need to initialize Model ourselves)
+                        // 1. (ArhStringResponse) It contains just string value, And will sits over ArhStringResponse (So we need to initialize Model ourselves)
                         if (typeof(TResponse) == typeof(ArhStringResponse))
                         {
-                            result = GenerateTResponseRhResponse<TResponse>();
+                            result = GenerateTResponseArhResponse<TResponse>();
                         }
-                        //It contains model data, But sits inside RhResponse Model (So we need to initialize Model ourselves)
+                        // 2. (ArhResponse<TResponse>) It contains model data, But sits inside ArhResponse Model (So we need to initialize Model ourselves)
                         else if (typeof(TResponse).IsGenericType &&
                                  typeof(TResponse).GetGenericTypeDefinition() == typeof(ArhResponse<>))
                         {
-                            result = GenerateTResponseRhResponse<TResponse>();
-                            //if Generic Model is String
+                            result = GenerateTResponseArhResponse<TResponse>();
+                            // A. (ArhResponse<string>) if Generic Model is String
                             var genericTypeArgument = typeof(TResponse).GenericTypeArguments[0];
                             if (genericTypeArgument == typeof(string))
                             {
                                 SetValueOnProperty(result, nameof(ArhResponse<object>.ResultModel), responseString);
                             }
-                            //if Generic Model is Object
+                            // B. (ArhResponse<T>) if Generic Model is Object
                             else
                             {
                                 // ReSharper disable once PossibleNullReferenceException
@@ -2002,20 +2002,29 @@ namespace Arh
                                     DeserializeToType(responseString, genericTypeArgument);
 
                                 SetValueOnProperty(result, nameof(ArhResponse<object>.ResultModel), output);
-                                //SetValueOnProperty(result, nameof(RhResponse<object>.ResultModel),
+                                //SetValueOnProperty(result, nameof(ArhResponse<object>.ResultModel),
                                 //    DeserializeToObject<TResponse>(jsonString);
                             }
                         }
-                        //It contains model data, and uses an inherited version of RhResponse (So we do not need to pre-initialize it)
+                        // 3. (TResponse:ArhResponse) It contains model data, and uses an inherited version of ArhResponse (So we do not need to pre-initialize it)
                         else
                         {
                             result = DeserializeToObject<TResponse>(responseString);
+                            if (result == null)
+                            {
+                                result = GenerateTResponseArhResponse<TResponse>();
+                                SetValueOnProperty(result, nameof(ArhResponse.Exception), new NullReferenceException(
+                                    (responseString == null || responseString.Trim().Length == 0)
+                                        ? "The server respond with an empty string"
+                                        : "The response result in a null value"
+                                ));
+                            }
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    result = GenerateTResponseRhResponse<TResponse>();
+                    result = GenerateTResponseArhResponse<TResponse>();
 
                     object fallbackResult = null;
                     Dictionary<Type, Exception> fallbackExceptions = new Dictionary<Type, Exception>();
@@ -2125,7 +2134,7 @@ namespace Arh
                     ? new StreamReader(decompressed)
                     : new StreamReader(decompressed, options.StringResponseEncoding))
                 {
-                    if(cancellationToken.IsCancellationRequested)
+                    if (cancellationToken.IsCancellationRequested)
                         throw new TaskCanceledException();
 
                     result = await reader.ReadToEndAsync();
@@ -2251,11 +2260,11 @@ namespace Arh
         }
 
         /// <summary>
-        /// Generate TResponse of RhResponse type
+        /// Generate TResponse of ArhResponse type
         /// </summary>
         /// <typeparam name="TResponse"></typeparam>
         /// <returns></returns>
-        private static TResponse GenerateTResponseRhResponse<TResponse>()
+        private static TResponse GenerateTResponseArhResponse<TResponse>()
         {
             var constructorInfo = typeof(TResponse).GetConstructor(new Type[0]);
             if (constructorInfo == null)

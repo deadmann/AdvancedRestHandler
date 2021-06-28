@@ -7,19 +7,23 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <RootNamespace>Arh</RootNamespace>
-    <AssemblyVersion>1.3.0.0</AssemblyVersion>
-    <FileVersion>1.3.0.0</FileVersion>
-    <Version>1.3.0</Version>
+    <AssemblyVersion>1.4.0.0</AssemblyVersion>
+    <FileVersion>1.4.0.0</FileVersion>
+    <Version>1.4.0</Version>
     <RepositoryUrl>https://github.com/deadmann/AdvancedRestHandler</RepositoryUrl>
-    <PackageReleaseNotes>1.3.0
-- Add Async version of methods
-1.2.0:
-- Add PUT, PATCH and DELETE method
-1.1.1:
-- Add Author and Project details
-1.1.0:
-- Changed default namespace name from "AdvancedRestHandler" to "Arh" due to main class interfrences with namespace name
-1.0.0: Initial Package</PackageReleaseNotes>
+    <PackageReleaseNotes>
+      1.4.0
+      - Fix bug with inherited ArhResponse and empty response
+      1.3.0
+      - Add Async version of methods
+      1.2.0:
+      - Add PUT, PATCH and DELETE method
+      1.1.1:
+      - Add Author and Project details
+      1.1.0:
+      - Changed default namespace name from "AdvancedRestHandler" to "Arh" due to main class interfrences with namespace name
+      1.0.0: Initial Package
+    </PackageReleaseNotes>
     <Authors>Hassan Faghihi</Authors>
     <Copyright>© 2020 Hassan Faghihi</Copyright>
     <Description>ARH (Advanced Rest Handler) is an API client build on top of Newtownsoft package and System.Net.Http.HttpClient class, to provide an easy and unite way to request many form of APIs with different implementations</Description>
@@ -27,6 +31,7 @@
     <Product>AdvancedRestHandler</Product>
     <PackageId>AdvancedRestHandler</PackageId>
     <AssemblyName>AdvancedRestHandler</AssemblyName>
+    <PackageVersion>1.4.0</PackageVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
