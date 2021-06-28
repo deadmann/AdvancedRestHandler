@@ -8,11 +8,11 @@ This library is based on my exprience and need of working in the past company, t
 First install the package using following commands, or download it manually from release section...
 
 ```powershell
-Install-Package AdvancedRestHandler -Version 1.3.0
+Install-Package AdvancedRestHandler -Version 1.4.0
 ```
 or
 ```sh
-dotnet add package AdvancedRestHandler --version 1.3.0
+dotnet add package AdvancedRestHandler --version 1.4.0
 ```
 
 Then you can use the library.
