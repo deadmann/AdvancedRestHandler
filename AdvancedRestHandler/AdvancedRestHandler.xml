@@ -7,7 +7,7 @@
         <member name="T:Arh.AdvancedRestHandler">
             <summary>
             Advanced Rest Handler class, A tools that simplifies API calls. <br />
-            This class by default handle json properties with PascalCase keys, for camelCase or score_case (snake_case) please refer to <see cref="T:Arh.ArhCamelCaseWrapper"/> and <see cref="T:Arh.ArhSnakeCaseWrapper"/>
+            This class by default handle json properties with any case you use in name handling, but if you write standard C# code, for properties it will be PascalCase keys, for camelCase or score_case (snake_case) please refer to <see cref="T:Arh.ArhCamelCaseWrapper"/> and <see cref="T:Arh.ArhSnakeCaseWrapper"/>
             </summary>
         </member>
         <member name="P:Arh.AdvancedRestHandler.ClientDefaultHeaders">
@@ -809,9 +809,9 @@
             <param name="propertyName"></param>
             <param name="value"></param>
         </member>
-        <member name="M:Arh.AdvancedRestHandler.GenerateTResponseRhResponse``1">
+        <member name="M:Arh.AdvancedRestHandler.GenerateTResponseArhResponse``1">
             <summary>
-            Generate TResponse of RhResponse type
+            Generate TResponse of ArhResponse type
             </summary>
             <typeparam name="TResponse"></typeparam>
             <returns></returns>
