@@ -12,7 +12,7 @@ jobs:
     steps:
 
       - name: unit tests for .Net Core
-        uses: deadmann/AdvancedRestHandler@v1
+        uses: deadmann/AdvancedRestHandler@latest
         with:
           project_path: Tests/AdvancedRestHandler.Test_NetCore
           report_name: advanced_rest_handler_dotnet_core_test
