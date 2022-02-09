@@ -12,7 +12,6 @@ jobs:
     steps:
 
       - name: unit tests for .Net Core
-        uses: deadmann/AdvancedRestHandler@latest
         with:
           project_path: Tests/AdvancedRestHandler.Test_NetCore
           report_name: advanced_rest_handler_dotnet_core_test
@@ -20,4 +19,18 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           gist_name: advanced_rest_handler_dotnet_core_test.md
           gist_badge_label: 'Advanced Rest Handler .Net Core: %Counters_passed%/%Counters_total%'
+          gist_token: ${{ secrets.GIST_TOKEN }}
+
+  test-dotnet-framework:
+    runs-on: windows-latest
+    steps:
+
+      - name: unit tests for .Net Framework
+        with:
+          project_path: Tests/AdvancedRestHandler.Test_NetFramework
+          report_name: advanced_rest_handler_dotnet_framework_test
+          report_title: Advanced Rest Handler - Test .Net Framework
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          gist_name: advanced_rest_handler_dotnet_framework_test.md
+          gist_badge_label: 'Advanced Rest Handler .Net Framework: %Counters_passed%/%Counters_total%'
           gist_token: ${{ secrets.GIST_TOKEN }}
