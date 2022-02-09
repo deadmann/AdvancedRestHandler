@@ -17,7 +17,7 @@ jobs:
           dotnet-version: '3.1.x'
       - name: Setup Github Nuget Package Manager
         run: |
-          dotnet nuget add source "https://nuget.pkg.github.com/deadmann/index.json" --name "githubfeed" --username "deadmann" --password "${{ secrets.GITHUB_TOKEN }}"
+          dotnet nuget add source "https://nuget.pkg.github.com/deadmann/index.json" --name "github" --username "deadmann" --password "${{ secrets.GITHUB_TOKEN }}"
       - name: Install dependencies
         run: dotnet restore
       - name: Build
