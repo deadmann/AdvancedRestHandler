@@ -12,6 +12,7 @@ jobs:
     steps:
 
       - name: unit tests for .Net Core
+        uses: deadmann/AdvancedRestHandler@master
         with:
           project_path: Tests/AdvancedRestHandler.Test_NetCore
           report_name: advanced_rest_handler_dotnet_core_test
@@ -26,6 +27,7 @@ jobs:
     steps:
 
       - name: unit tests for .Net Framework
+        uses: deadmann/AdvancedRestHandler@master
         with:
           project_path: Tests/AdvancedRestHandler.Test_NetFramework
           report_name: advanced_rest_handler_dotnet_framework_test
