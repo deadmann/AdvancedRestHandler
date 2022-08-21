@@ -1,0 +1,26 @@
+name: Test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.1.x'
+      - name: Setup Github Nuget Package Manager
+        run: |
+          dotnet nuget update source "github" --username "deadmann" --password "${{ secrets.GITHUB_TOKEN }}" --store-password-in-clear-text
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build
+      - name: Test with the dotnet CLI
+        run: dotnet test
