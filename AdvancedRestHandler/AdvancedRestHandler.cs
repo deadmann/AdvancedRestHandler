@@ -22,7 +22,11 @@ namespace Arh
     /// </summary>
     public class AdvancedRestHandler
     {
+        private readonly ArhHttpClientType _arhHttpClientType;
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly HttpClient _httpClient;
         private readonly string _baseUrl;
+
         /// <summary>
         /// Provide custom headers that can be set within the request
         /// </summary>
@@ -35,7 +39,8 @@ namespace Arh
         /// </summary>
         public TimeSpan? GlobalTimeout { get; set; }
 
-        // ReSharper disable once UnusedMember.Global
+        #region Initialization
+        
         /// <summary>
         /// The Constructor
         /// </summary>
@@ -45,6 +50,7 @@ namespace Arh
         [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
         public AdvancedRestHandler(string baseUrl, bool fixEndOfUrl = true)
         {
+            _arhHttpClientType = ArhHttpClientType.Manual;
             if (!string.IsNullOrWhiteSpace(baseUrl) && fixEndOfUrl)
             {
                 _baseUrl = baseUrl.TrimEnd('/') + '/';
@@ -54,12 +60,12 @@ namespace Arh
                 _baseUrl = baseUrl;
             }
         }
-
+        
         /// <summary>
         /// The Constructor
         /// </summary>
         [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
-        public AdvancedRestHandler() : this(null)
+        public AdvancedRestHandler() : this((string)null)
         {
         }
 
@@ -70,9 +76,59 @@ namespace Arh
         /// <param name="options"></param>
         public AdvancedRestHandler(string baseUrl, RestHandlerInitializerOptions options) : this(baseUrl, options.FixEndOfUrl)
         {
-
+            SetGlobalConfigurationVariables(options);
         }
 
+        /// <summary>
+        /// This constructor allows using of previously created HttpClient, especially can be used for testing purpose to provide in-memory HttpClient. <br />
+        /// NOTE: The `BaseUrl` and `FixEndOfUrl` cannot be set after HttpClient is created, so the change in requesting Url cannot be tested. <br />
+        /// NOTE: It will override the provided HttpClient configuration (such as timeout)
+        /// </summary>
+        /// <param name="httpClient"></param>
+        /// <param name="options"></param>
+        [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
+        public AdvancedRestHandler(HttpClient httpClient, RestHandlerInitializerOptions options = null)
+        {
+            _arhHttpClientType = ArhHttpClientType.HttpClient;
+            _httpClient = httpClient 
+                          ?? throw new ArgumentNullException(nameof(httpClient), "Provided HttpClient is null.");
+
+            SetGlobalConfigurationVariables(options);
+        }
+
+        /// <summary>
+        /// This constructor allows creation of custom HttpClient, especially can be used for testing purpose to provide in-memory HttpClient. <br />
+        /// Note: The `BaseUrl` and `FixEndOfUrl` cannot be set after HttpClient is created, so the change in requesting Url cannot be tested. <br />
+        /// NOTE: It will override the provided HttpClient configuration (such as timeout), in case you are returning a same instance
+        /// </summary>
+        /// <param name="httpClientFactory"></param>
+        /// <param name="options"></param>
+        [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
+        public AdvancedRestHandler(IHttpClientFactory httpClientFactory, RestHandlerInitializerOptions options = null)
+        {
+            _arhHttpClientType = ArhHttpClientType.HttpClientFactory;
+            _httpClientFactory = httpClientFactory 
+                                 ?? throw new ArgumentNullException(nameof(httpClientFactory), "Provided IHttpClientFactory is null.");
+
+            SetGlobalConfigurationVariables(options);
+        }
+
+        private void SetGlobalConfigurationVariables(RestHandlerInitializerOptions options)
+        {
+            if (_arhHttpClientType != ArhHttpClientType.Manual)
+            {
+                if (options.FixEndOfUrl)
+                {
+                    throw new NotSupportedException(
+                        "FixEndOfUrl option is not supported when using external HttpClient or IHttpClientFactory");
+                }
+            }
+            
+            GlobalTimeout = options.Timeout;
+        }
+        
+        #endregion Initialization
+        
         #region GET
 
         /// <summary>
@@ -134,7 +190,7 @@ namespace Arh
             string jsonString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = GetHttpClient(options))
+            using (HttpClient client = GetAndConfigureHttpClient(options))
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -173,7 +229,7 @@ namespace Arh
             string jsonString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = GetHttpClient(options))
+            using (HttpClient client = GetAndConfigureHttpClient(options))
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -259,7 +315,7 @@ namespace Arh
             string jsonString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = GetHttpClient(options))
+            using (HttpClient client = GetAndConfigureHttpClient(options))
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -304,7 +360,7 @@ namespace Arh
             string jsonString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = GetHttpClient(options))
+            using (HttpClient client = GetAndConfigureHttpClient(options))
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -395,7 +451,7 @@ namespace Arh
             string jsonString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = GetHttpClient(options))
+            using (HttpClient client = GetAndConfigureHttpClient(options))
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 if (options.UseGZip)
@@ -435,7 +491,7 @@ namespace Arh
             string jsonString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = GetHttpClient(options))
+            using (HttpClient client = GetAndConfigureHttpClient(options))
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 if (options.UseGZip)
@@ -530,7 +586,7 @@ namespace Arh
             string requestString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = GetHttpClient(options))
+            using (HttpClient client = GetAndConfigureHttpClient(options))
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -584,7 +640,7 @@ namespace Arh
             string requestString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = GetHttpClient(options))
+            using (HttpClient client = GetAndConfigureHttpClient(options))
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -636,7 +692,7 @@ namespace Arh
             string jsonString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = GetHttpClient(options))
+            using (HttpClient client = GetAndConfigureHttpClient(options))
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -681,7 +737,7 @@ namespace Arh
             string jsonString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = GetHttpClient(options))
+            using (HttpClient client = GetAndConfigureHttpClient(options))
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -772,7 +828,7 @@ namespace Arh
             string jsonString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = GetHttpClient(options))
+            using (HttpClient client = GetAndConfigureHttpClient(options))
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 if (options.UseGZip)
@@ -812,7 +868,7 @@ namespace Arh
             string jsonString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = GetHttpClient(options))
+            using (HttpClient client = GetAndConfigureHttpClient(options))
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 if (options.UseGZip)
@@ -907,7 +963,7 @@ namespace Arh
             string requestString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = GetHttpClient(options))
+            using (HttpClient client = GetAndConfigureHttpClient(options))
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -961,7 +1017,7 @@ namespace Arh
             string requestString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = GetHttpClient(options))
+            using (HttpClient client = GetAndConfigureHttpClient(options))
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -1013,7 +1069,7 @@ namespace Arh
             string jsonString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = GetHttpClient(options))
+            using (HttpClient client = GetAndConfigureHttpClient(options))
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -1062,7 +1118,7 @@ namespace Arh
             string jsonString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = GetHttpClient(options))
+            using (HttpClient client = GetAndConfigureHttpClient(options))
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -1157,7 +1213,7 @@ namespace Arh
             string jsonString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = GetHttpClient(options))
+            using (HttpClient client = GetAndConfigureHttpClient(options))
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 if (options.UseGZip)
@@ -1201,7 +1257,7 @@ namespace Arh
             string jsonString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = GetHttpClient(options))
+            using (HttpClient client = GetAndConfigureHttpClient(options))
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 if (options.UseGZip)
@@ -1300,7 +1356,7 @@ namespace Arh
             string requestString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = GetHttpClient(options))
+            using (HttpClient client = GetAndConfigureHttpClient(options))
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -1359,7 +1415,7 @@ namespace Arh
             string requestString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = GetHttpClient(options))
+            using (HttpClient client = GetAndConfigureHttpClient(options))
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -1458,7 +1514,7 @@ namespace Arh
             string jsonString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = GetHttpClient(options))
+            using (HttpClient client = GetAndConfigureHttpClient(options))
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -1507,7 +1563,7 @@ namespace Arh
             string jsonString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = GetHttpClient(options))
+            using (HttpClient client = GetAndConfigureHttpClient(options))
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -1602,7 +1658,7 @@ namespace Arh
             string jsonString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = GetHttpClient(options))
+            using (HttpClient client = GetAndConfigureHttpClient(options))
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 if (options.UseGZip)
@@ -1646,7 +1702,7 @@ namespace Arh
             string jsonString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = GetHttpClient(options))
+            using (HttpClient client = GetAndConfigureHttpClient(options))
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 if (options.UseGZip)
@@ -1745,7 +1801,7 @@ namespace Arh
             string requestString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = GetHttpClient(options))
+            using (HttpClient client = GetAndConfigureHttpClient(options))
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -1803,7 +1859,7 @@ namespace Arh
             string requestString;
             HttpStatusCode statusCode;
 
-            using (HttpClient client = GetHttpClient(options))
+            using (HttpClient client = GetAndConfigureHttpClient(options))
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -1843,11 +1899,39 @@ namespace Arh
 
         #region HelperMethods
 
+        #region Create And Configure HttpClient
         /// <summary>
         /// Create new Instance of the HttpClient depend on the initialization conditions
         /// </summary>
         /// <returns></returns>
-        private HttpClient GetHttpClient(RestHandlerRequestOptions requestOptions)
+        private HttpClient GetAndConfigureHttpClient(RestHandlerRequestOptions requestOptions)
+        {
+            HttpClient httpClient = GetHttpClient();
+
+            ConfigureHttpClient(httpClient, requestOptions);
+            
+            return httpClient;
+        }
+
+        private HttpClient GetHttpClient()
+        {
+            switch (_arhHttpClientType)
+            {
+                case ArhHttpClientType.HttpClientFactory:
+                    var httpClient = _httpClientFactory.CreateClient();
+                    if (httpClient == null)
+                        throw new NullReferenceException(
+                            "The provided instance of IHttpClientFactory.CreateClient() returns null.");
+                    return httpClient;
+                case ArhHttpClientType.HttpClient:
+                    return _httpClient;
+                case ArhHttpClientType.Manual:
+                default:
+                    return MakeNewHttpClient();
+            }
+        }
+
+        private HttpClient MakeNewHttpClient()
         {
             HttpClient httpClient;
             if (!string.IsNullOrWhiteSpace(_baseUrl))
@@ -1862,14 +1946,18 @@ namespace Arh
                 httpClient = new HttpClient();
             }
 
+            return httpClient;
+        }
+
+        private void ConfigureHttpClient(HttpClient httpClient, RestHandlerRequestOptions requestOptions)
+        {
             if (requestOptions.Timeout.HasValue)
                 httpClient.Timeout = requestOptions.Timeout.Value;
             else if (GlobalTimeout.HasValue)
                 httpClient.Timeout = GlobalTimeout.Value;
-
-            return httpClient;
         }
-
+        #endregion Create And Configure HttpClient
+        
         /// <summary>
         /// Convert object to "Url Encoded" Key Value
         /// Based On: https://geeklearning.io/serialize-an-object-to-an-url-encoded-string-in-csharp/
@@ -2279,5 +2367,12 @@ namespace Arh
         }
 
         #endregion HelperMethods
+    }
+
+    internal enum ArhHttpClientType
+    {
+        Manual,
+        HttpClient,
+        HttpClientFactory
     }
 }
