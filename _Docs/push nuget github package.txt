@@ -3,8 +3,11 @@ $ dotnet nuget add source https://nuget.pkg.github.com/deadmann/index.json -n gi
 // if already exists....:   dotnet nuget remove source github
 // if key update is required: https://github.com/settings/tokens
 
-// Step 2: Pack
+// Step 2: Build
+$ dotnet build --configuration Release
+
+// Step 3: Pack
 $ dotnet pack --configuration Release
 
-// Step 3: Publish
+// Step 4: Publish
 $ dotnet nuget push "bin/Release/AdvancedRestHandler.1.0.0.nupkg" --source "github"
