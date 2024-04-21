@@ -1,0 +1,52 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  build-dotnet-standard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.1' # or whichever version you need for .NET Standard
+
+      - name: Build .NET Standard DLL
+        run: dotnet build -c Release
+
+  build-dotnet-core:
+    runs-on: ubuntu-latest
+    needs: build-dotnet-standard
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.x' # or whichever version you need for .NET Core
+
+      - name: Build .NET Core
+        run: dotnet build -c Release
+
+  build-dotnet-framework:
+    runs-on: windows-latest
+    needs: build-dotnet-standard
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup .NET Framework
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '4.x' # or whichever version you need for .NET Framework
+
+      - name: Build .NET Framework
+        run: msbuild /t:restore /p:Configuration=Release
