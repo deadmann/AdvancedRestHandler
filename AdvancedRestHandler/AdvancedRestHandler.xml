@@ -40,6 +40,24 @@
             <param name="baseUrl"></param>
             <param name="options"></param>
         </member>
+        <member name="M:Arh.AdvancedRestHandler.#ctor(System.Net.Http.HttpClient,Arh.RestHandlerInitializerOptions)">
+            <summary>
+            This constructor allows using of previously created HttpClient, especially can be used for testing purpose to provide in-memory HttpClient. <br />
+            NOTE: The `BaseUrl` and `FixEndOfUrl` cannot be set after HttpClient is created, so the change in requesting Url cannot be tested. <br />
+            NOTE: It will override the provided HttpClient configuration (such as timeout)
+            </summary>
+            <param name="httpClient"></param>
+            <param name="options"></param>
+        </member>
+        <member name="M:Arh.AdvancedRestHandler.#ctor(System.Net.Http.IHttpClientFactory,Arh.RestHandlerInitializerOptions)">
+            <summary>
+            This constructor allows creation of custom HttpClient, especially can be used for testing purpose to provide in-memory HttpClient. <br />
+            Note: The `BaseUrl` and `FixEndOfUrl` cannot be set after HttpClient is created, so the change in requesting Url cannot be tested. <br />
+            NOTE: It will override the provided HttpClient configuration (such as timeout), in case you are returning a same instance
+            </summary>
+            <param name="httpClientFactory"></param>
+            <param name="options"></param>
+        </member>
         <member name="M:Arh.AdvancedRestHandler.GetData``1(System.String,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Collections.Generic.IEnumerable{System.String}}},System.Boolean)">
             <summary>
             Sending a GET Request to the Server and Returns Data
@@ -718,7 +736,7 @@
             <param name="cancellationToken"></param>
             <returns>Returns Instance of Type <see cref="!:TResponse"/></returns>
         </member>
-        <member name="M:Arh.AdvancedRestHandler.GetHttpClient(Arh.RestHandlerRequestOptions)">
+        <member name="M:Arh.AdvancedRestHandler.GetAndConfigureHttpClient(Arh.RestHandlerRequestOptions)">
             <summary>
             Create new Instance of the HttpClient depend on the initialization conditions
             </summary>
@@ -964,6 +982,10 @@
             In some web framework, existence or not existence of slash '/' can cause to invoke an incorrect url; 
             This feature can be turned of, but requires a manually handling of URL's slash, at the end of base url or begin of partial urls
             </summary>
+            <remarks>
+            Supports only when creating HttpClient internal.<br/>
+            It is not supported when providing `HttpClient`, or `IHttpClientFactory` 
+            </remarks>
         </member>
         <member name="P:Arh.RestHandlerInitializerOptions.Timeout">
             <summary>
