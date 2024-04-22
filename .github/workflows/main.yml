@@ -1,0 +1,134 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  build-arh-dotnet:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '6.x' # or whichever version you need for .NET
+      - run: echo '${{ steps.stepid.outputs.dotnet-version }}'
+
+      - name: Build .NET Standard DLL
+        run: dotnet build -c Release AdvancedRestHandler/AdvancedRestHandler.csproj
+  
+  build-arh-dotnet-core:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '3.1' # or whichever version you need for .NET Core
+      - run: echo '${{ steps.stepid.outputs.dotnet-version }}'
+
+      - name: Build .NET Standard DLL
+        run: dotnet build -c Release AdvancedRestHandler/AdvancedRestHandler.csproj
+
+  build-arh-dotnet-framework:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1
+
+      - name: Setup NuGet.exe for use with actions
+        uses: nuget/setup-nuget@v2
+
+      - name: Update NuGet
+        run: nuget.exe update -self
+
+      - name: Restore NuGet packages
+        run: nuget restore AdvancedRestHandler/AdvancedRestHandler.csproj
+
+      - name: Build the Project
+        run: msbuild AdvancedRestHandler/AdvancedRestHandler.csproj
+
+  build-test-dotnet:
+    runs-on: ubuntu-latest
+    needs: build-arh-dotnet
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '6.x' # or whichever version you need for .NET
+      - run: echo '${{ steps.stepid.outputs.dotnet-version }}'
+
+      - name: Build .NET Project
+        run: dotnet build -c Release Tests/AdvancedRestHandler.Test_Net/AdvancedRestHandler.Test_Net.csproj
+
+  build-test-dotnet-core:
+    runs-on: ubuntu-latest
+    needs: build-arh-dotnet-core
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '3.1' # or whichever version you need for .NET Core
+      - run: echo '${{ steps.stepid.outputs.dotnet-version }}'
+
+      - name: Build .NET Core Project
+        run: dotnet build -c Release Tests/AdvancedRestHandler.Test_NetCore/AdvancedRestHandler.Test_NetCore.csproj
+
+  build-test-dotnet-framework:
+    runs-on: windows-latest
+    needs: build-arh-dotnet-framework
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1
+
+      - name: Setup NuGet.exe for use with actions
+        uses: nuget/setup-nuget@v2
+
+      - name: Update NuGet
+        run: nuget.exe update -self
+
+      - name: Restore NuGet packages
+        run: nuget restore Tests/AdvancedRestHandler.Test_NetFramework/AdvancedRestHandler.Test_NetFramework.csproj -SolutionDirectory .
+
+      - name: Build the Project
+        run: msbuild Tests/AdvancedRestHandler.Test_NetFramework/AdvancedRestHandler.Test_NetFramework.csproj
+
+
+
+###### MATRIX STRATEGY .... CHECK IF ARH SUPPORTS       
+#        name: NuGet Restore
+#        on: [ push, pull_request ]
+#        jobs:
+#          build:
+#            runs-on: ${{ matrix.os }}
+#            strategy:
+#              matrix:
+#                os: [ windows-latest, ubuntu-latest, macOS-latest ]
+#                nuget: [ latest, preview, 4.x, 5.3.1 ]
+#            name: NuGet@${{ matrix.nuget }} sample
+#            steps:
+#              - uses: actions/checkout@master
+#              - name: Setup NuGet.exe
+#                uses: nuget/setup-nuget@v2
+#                with:
+#                  nuget-version: ${{ matrix.nuget }}
+#              - run: nuget restore MyProject.sln
