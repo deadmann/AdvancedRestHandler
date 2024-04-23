@@ -1,12 +1,8 @@
-﻿using System;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using NUnit.Framework;
 // using Moq;
 // using Moq.Protected;
-using NUnit.Framework;
 
-namespace AdvancedRestHandler.Test_NetFramework
+namespace Arh.Test.Fx
 {
     [TestFixture]
     public class Tests

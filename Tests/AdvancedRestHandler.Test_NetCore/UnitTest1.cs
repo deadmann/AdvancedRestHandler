@@ -1,13 +1,6 @@
-using System;
-using System.Net;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-using Moq;
-using Moq.Protected;
 using NUnit.Framework;
 
-namespace AdvancedRestHandler.Tests
+namespace Arh.Test.Core
 {
     public class Tests
     {
