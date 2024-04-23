@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
+using System.Security.Authentication;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,6 +39,11 @@ namespace Arh
         /// If set, will be used globally for requests
         /// </summary>
         public TimeSpan? GlobalTimeout { get; set; }
+        
+        /// <summary>
+        /// If set, will be used globally for requests
+        /// </summary>
+        public SslProtocols? GlobalSslProtocols { get; set; }
 
         #region Initialization
         
@@ -125,8 +131,9 @@ namespace Arh
             }
             
             GlobalTimeout = options.Timeout;
+            GlobalSslProtocols = options.SslProtocols;
         }
-        
+
         #endregion Initialization
         
         #region GET
@@ -1951,12 +1958,14 @@ namespace Arh
             return httpClient;
         }
 
-        private static HttpClientHandler MakeNewHttpClientHandler(RestHandlerRequestOptions requestOptions)
+        private HttpClientHandler MakeNewHttpClientHandler(RestHandlerRequestOptions requestOptions)
         {
             var result = new HttpClientHandler();
 
+            if (GlobalSslProtocols is not null)
+                result.SslProtocols = GlobalSslProtocols.Value;
             if (requestOptions.SslProtocols is not null)
-                result.SslProtocols = requestOptions.SslProtocols!.Value; 
+                result.SslProtocols = requestOptions.SslProtocols.Value; 
             
             return result;
         }
