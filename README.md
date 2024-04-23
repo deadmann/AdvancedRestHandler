@@ -3,16 +3,16 @@ A utility code that can be used to request Data from services...
 
 This library is based on my experience and need of working in the past company, taking many services in. I could handle any request so far using it, and every time I felt it doesn't support my need, i tried to expand it.
 
-[![NuGet](https://img.shields.io/badge/nuget-v1.5.0-blue)](https://www.nuget.org/packages/AdvancedRestHandler/)
+[![NuGet](https://img.shields.io/badge/nuget-v1.6.0-blue)](https://www.nuget.org/packages/AdvancedRestHandler/)
 
 First install the package using following commands, or download it manually from release section...
 
 ```powershell
-Install-Package AdvancedRestHandler -Version 1.5.0
+Install-Package AdvancedRestHandler -Version 1.6.0
 ```
 or
 ```sh
-dotnet add package AdvancedRestHandler --version 1.5.0
+dotnet add package AdvancedRestHandler --version 1.6.0
 ```
 
 Then you can use the library.
@@ -31,13 +31,30 @@ in the above code, in the `AdvancedRestHandler` constructor:
 in the `GetData`:
 
  - `TResponse` is the type of data you are receiving and the incoming json or (i'm not sure if i pars XML, but if supported XML) should be deserialized to
- - `url` depending on the existance of baseUrl can be either the full url to a service, or the versitile part of the path in the service url
+ - `url` depending on the existence of baseUrl can be either the full url to a service, or the versitile part of the path in the service url
  - `options` are modifier that can affect the behaviour of the service
  
 Also note that request can be:
 
- - A premitive
+ - A primitive
  - A Type
  - A Type inherited from ArhResponse
  - An object of type ArhResponse<[Your Type]>
  - An object of type ArhStringResponse
+
+## Exceptions
+
+-------------
+
+There are option exceptions for external `HttpClient` and `IHttpClientFactory` that are consumed by ArhRestHandler.
+
+### RestHandlerInitializerOptions:
+The Arh `RestHandlerInitializerOptions` is a model that provide options that you will set in the beginning of Arh life-cycle
+
+ - `FixEndOfUrl`: (Throw exceptions if set to true) This option fix the slash `/` at the end of your URLs, so you don't need to think about your partial url passed every time
+ - `SslProtocols`: (Does nothing if is set) This option allow you to change your request SSL/TSL protocols
+
+### RestHandlerRequestOptions:
+The Arh `RestHandlerRequestOptions` is a model that provide options per request of ARH
+
+ - `SslProtocols`: (Does nothing if is set) This option allow you to change your request SSL/TSL protocols

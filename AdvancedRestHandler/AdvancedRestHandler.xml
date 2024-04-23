@@ -1037,5 +1037,10 @@
             Remove default "; charset=utf-8" from Content-Type in header
             </summary>
         </member>
+        <member name="P:Arh.RestHandlerRequestOptions.SslProtocols">
+            <summary>
+            Allow support for different version of SSL/TSL protocols
+            </summary>
+        </member>
     </members>
 </doc>

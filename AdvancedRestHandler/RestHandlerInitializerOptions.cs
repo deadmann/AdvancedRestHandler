@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Security.Authentication;
 
 namespace Arh
 {
@@ -26,5 +27,10 @@ namespace Arh
         /// Set global Timeout of requests
         /// </summary>
         public TimeSpan Timeout { get; set; }
+        
+        /// <summary>
+        /// Set global SslProtocols
+        /// </summary>
+        public SslProtocols? SslProtocols { get; set; } = null;
     }
 }

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
+using System.Security.Authentication;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,6 +39,11 @@ namespace Arh
         /// If set, will be used globally for requests
         /// </summary>
         public TimeSpan? GlobalTimeout { get; set; }
+        
+        /// <summary>
+        /// If set, will be used globally for requests
+        /// </summary>
+        public SslProtocols? GlobalSslProtocols { get; set; }
 
         #region Initialization
         
@@ -125,8 +131,9 @@ namespace Arh
             }
             
             GlobalTimeout = options.Timeout;
+            GlobalSslProtocols = options.SslProtocols;
         }
-        
+
         #endregion Initialization
         
         #region GET
@@ -1906,14 +1913,14 @@ namespace Arh
         /// <returns></returns>
         private HttpClient GetAndConfigureHttpClient(RestHandlerRequestOptions requestOptions)
         {
-            HttpClient httpClient = GetHttpClient();
+            HttpClient httpClient = GetHttpClient(requestOptions);
 
             ConfigureHttpClient(httpClient, requestOptions);
             
             return httpClient;
         }
 
-        private HttpClient GetHttpClient()
+        private HttpClient GetHttpClient(RestHandlerRequestOptions requestOptions)
         {
             switch (_arhHttpClientType)
             {
@@ -1927,26 +1934,40 @@ namespace Arh
                     return _httpClient;
                 case ArhHttpClientType.Manual:
                 default:
-                    return MakeNewHttpClient();
+                    return MakeNewHttpClient(requestOptions);
             }
         }
 
-        private HttpClient MakeNewHttpClient()
+        private HttpClient MakeNewHttpClient(RestHandlerRequestOptions requestOptions)
         {
+            HttpMessageHandler httpMessageHandler = MakeNewHttpClientHandler(requestOptions);
+
             HttpClient httpClient;
             if (!string.IsNullOrWhiteSpace(_baseUrl))
             {
-                httpClient = new HttpClient
+                httpClient = new HttpClient(httpMessageHandler)
                 {
                     BaseAddress = new Uri(_baseUrl)
                 };
             }
             else
             {
-                httpClient = new HttpClient();
+                httpClient = new HttpClient(httpMessageHandler);
             }
 
             return httpClient;
+        }
+
+        private HttpClientHandler MakeNewHttpClientHandler(RestHandlerRequestOptions requestOptions)
+        {
+            var result = new HttpClientHandler();
+
+            if (GlobalSslProtocols is not null)
+                result.SslProtocols = GlobalSslProtocols.Value;
+            if (requestOptions.SslProtocols is not null)
+                result.SslProtocols = requestOptions.SslProtocols.Value; 
+            
+            return result;
         }
 
         private void ConfigureHttpClient(HttpClient httpClient, RestHandlerRequestOptions requestOptions)
@@ -2124,9 +2145,9 @@ namespace Arh
                             {
                                 fallbackResult = Convert.ChangeType(responseString, typeof(string));
                             }
-                            else if (requestString.StartsWith("[") || responseString.StartsWith("{"))
+                            else if (responseString!.StartsWith("[") || responseString!.StartsWith("{"))
                             {
-                                fallbackResult = DeserializeToType(responseString, fallbackType);
+                                fallbackResult = DeserializeToType(responseString!, fallbackType);
                             }
 
                             SetValueOnProperty(result, nameof(ArhResponse.FallbackModel), fallbackResult);
@@ -2257,7 +2278,7 @@ namespace Arh
             return typeof(JsonConvert)
                 .GetMethod(nameof(JsonConvert.DeserializeObject), new[] { typeof(string), typeof(Type) })
                 //?.MakeGenericMethod(genericTypeArgument)
-                .Invoke(null, new object[] { jsonString, genericTypeArgument });
+                !.Invoke(null, new object[] { jsonString, genericTypeArgument });
         }
 
         /// <summary>

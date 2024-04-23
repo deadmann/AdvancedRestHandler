@@ -6,6 +6,8 @@
     <IsPackable>false</IsPackable>
 
     <RootNamespace>AdvancedRestHandler.Tests</RootNamespace>
+
+    <LangVersion>11</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
