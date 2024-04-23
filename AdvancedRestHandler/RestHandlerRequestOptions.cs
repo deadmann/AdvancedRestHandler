@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Security.Authentication;
 using System.Text;
 
 namespace Arh
@@ -11,6 +12,7 @@ namespace Arh
     [SuppressMessage("ReSharper", "RedundantDefaultMemberInitializer")]
     [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
     [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global")]
+    [SuppressMessage("ReSharper", "PropertyCanBeMadeInitOnly.Global")]
     public class RestHandlerRequestOptions
     {
         /// <summary>
@@ -37,7 +39,7 @@ namespace Arh
         /// <summary>
         /// If the request is not convert-able to the provided type, then we can try to convert it to this type instead
         /// </summary>
-        public List<Type> FallbackModels { get; set; } = new List<Type>();
+        public List<Type> FallbackModels { get; set; } = new();
 
         /// <summary>
         /// Use another encoding for the content passed to StringContent Object used by JSON serializer
@@ -53,5 +55,10 @@ namespace Arh
         /// Remove default "; charset=utf-8" from Content-Type in header
         /// </summary>
         public bool OmitContentTypeCharSet { get; set; } = false;
+
+        /// <summary>
+        /// Allow support for different version of SSL/TSL protocols
+        /// </summary>
+        public SslProtocols? SslProtocols { get; set; } = null;
     }
 }
