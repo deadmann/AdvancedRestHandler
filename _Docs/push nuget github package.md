@@ -26,7 +26,7 @@ $ dotnet nuget push "bin/Release/AdvancedRestHandler.1.0.0.nupkg" --source "gith
 ```
 // OR (Based on nuget.config Configuration)
 ```bash
-$ dotnet nuget push "bin/Release/AdvancedRestHandler.1.6.0.nupkg" --source "github" --api-key=[GH_AccessToken]
+$ dotnet nuget push "bin/Release/AdvancedRestHandler.1.0.0.nupkg" --source "github" --api-key=[GH_AccessToken]
 ```
 // OR (With %Key%)
 ```bash

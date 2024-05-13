@@ -2329,7 +2329,7 @@ namespace Arh
 #warning ...???
                 var keyValueOnObject = ToKeyValue(req);
                 var keyValueRequest = new List<KeyValuePair<string, string>>();
-                foreach (KeyValuePair<string, string> p in keyValueRequest)
+                foreach (KeyValuePair<string, string> p in keyValueOnObject)
                 {
                     if (p.Value != null)
                         keyValueRequest.Add(new KeyValuePair<string, string>(p.Key, p.Value));
