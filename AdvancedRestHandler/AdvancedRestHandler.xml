@@ -20,6 +20,11 @@
             If set, will be used globally for requests
             </summary>
         </member>
+        <member name="P:Arh.AdvancedRestHandler.GlobalSslProtocols">
+            <summary>
+            If set, will be used globally for requests
+            </summary>
+        </member>
         <member name="M:Arh.AdvancedRestHandler.#ctor(System.String,System.Boolean)">
             <summary>
             The Constructor
@@ -990,6 +995,11 @@
         <member name="P:Arh.RestHandlerInitializerOptions.Timeout">
             <summary>
             Set global Timeout of requests
+            </summary>
+        </member>
+        <member name="P:Arh.RestHandlerInitializerOptions.SslProtocols">
+            <summary>
+            Set global SslProtocols
             </summary>
         </member>
         <member name="T:Arh.RestHandlerRequestOptions">
