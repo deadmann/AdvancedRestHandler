@@ -4,6 +4,8 @@ A utility code that can be used to request Data from services...
 This library is based on my experience and need of working in the past company, taking many services in. I could handle any request so far using it, and every time I felt it doesn't support my need, i tried to expand it.
 
 [![NuGet](https://img.shields.io/badge/nuget-v1.7.0-blue)](https://www.nuget.org/packages/AdvancedRestHandler/)
+[![Build and Test](https://github.com/deadmann/AdvancedRestHandler/actions/workflows/main.yml/badge.svg)](https://github.com/deadmann/AdvancedRestHandler/actions/workflows/main.yml)
+[![SonarCloud](https://github.com/deadmann/AdvancedRestHandler/actions/workflows/build.yml/badge.svg)](https://github.com/deadmann/AdvancedRestHandler/actions/workflows/build.yml)
 
 First install the package using following commands, or download it manually from release section...
 
